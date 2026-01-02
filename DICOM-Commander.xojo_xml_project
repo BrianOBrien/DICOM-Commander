@@ -288,11 +288,15 @@
    <SourceLine>LeftAEEndpointView.Host = "MicMac.local"</SourceLine>
    <SourceLine>LeftAEEndpointView.Port = "11112"</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>RightAEEndpointView.AET = "MicroDicom"</SourceLine>
+   <SourceLine>RightAEEndpointView.Host = "DESKTOP-6JJ1H7E.local"</SourceLine>
+   <SourceLine>RightAEEndpointView.Port = "11112"</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>SelfAEEndpointView.AET = "PACSync"</SourceLine>
    <SourceLine>SelfAEEndpointView.Host = "piFiveAlive"</SourceLine>
    <SourceLine>SelfAEEndpointView.Port = "104"</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>var RootQ as New dcmtk.AQuery()</SourceLine>
+   <SourceLine>var RootQ as New AQuery()</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>//r as dicom.EnumROOTS=dicom.enumROOTS.STUDY, </SourceLine>
    <SourceLine>//l as dicom.enumLEVELS=dicom.enumLEVELS.STUDY, </SourceLine>
@@ -327,6 +331,54 @@
    <SourceLine>PopulateTreeView(LeftTree, LeftRoot)</SourceLine>
    <SourceLine>PopulateTreeView(RightTree, RightRoot)</SourceLine>
    <SourceLine></SourceLine>
+   <SourceLine>LayoutUI</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+ </HookInstance>
+ <HookInstance>
+  <ItemName>Resized</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1247485951</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Resized()</SourceLine>
+   <SourceLine>LayoutUI</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+ </HookInstance>
+ <HookInstance>
+  <ItemName>Paint</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1055205375</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Paint(g As Graphics, areas() As Rect)</SourceLine>
+   <SourceLine>// Deep purple, not neon</SourceLine>
+   <SourceLine>g.DrawingColor = Color.RGB(&amp;h6D, &amp;h28, &amp;hD9) // #6D28D9</SourceLine>
+   <SourceLine>g.PenSize = 1                               // thin, crisp</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Slight inset so it doesn't fight the control edges</SourceLine>
+   <SourceLine>Var inset As Integer = 1</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Left tree border</SourceLine>
+   <SourceLine>g.DrawRectangle( _</SourceLine>
+   <SourceLine>LeftTree.Left - inset, _</SourceLine>
+   <SourceLine>LeftTree.Top - inset, _</SourceLine>
+   <SourceLine>LeftTree.Width + (inset * 2), _</SourceLine>
+   <SourceLine>LeftTree.Height + (inset * 2) _</SourceLine>
+   <SourceLine>)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Right tree border</SourceLine>
+   <SourceLine>g.DrawRectangle( _</SourceLine>
+   <SourceLine>RightTree.Left - inset, _</SourceLine>
+   <SourceLine>RightTree.Top - inset, _</SourceLine>
+   <SourceLine>RightTree.Width + (inset * 2), _</SourceLine>
+   <SourceLine>RightTree.Height + (inset * 2) _</SourceLine>
+   <SourceLine>)</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>End Sub</SourceLine>
   </ItemSource>
  </HookInstance>
@@ -337,7 +389,7 @@
   <PartID>1585750015</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub PopulateTreeView(tv As TreeView.DesktopTreeView, root As ModelSync.DicomNode)</SourceLine>
+   <SourceLine>Sub PopulateTreeView(tv As DesktopTreeView, root As ModelSync.DicomNode)</SourceLine>
    <SourceLine>tv.RemoveAllNodes</SourceLine>
    <SourceLine>If root Is Nil Then Return</SourceLine>
    <SourceLine></SourceLine>
@@ -351,7 +403,7 @@
   <AliasName></AliasName>
   <ItemFlags>33</ItemFlags>
   <IsShared>0</IsShared>
-  <ItemParams>tv As TreeView.DesktopTreeView, root As ModelSync.DicomNode</ItemParams>
+  <ItemParams>tv As DesktopTreeView, root As ModelSync.DicomNode</ItemParams>
   <ItemResult></ItemResult>
  </Method>
  <Method>
@@ -403,10 +455,10 @@
   <PartID>1032218623</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub AddTreeNode(tv As TreeView.DesktopTreeView, parent As TreeView.DesktopTreeViewNode, dNode As ModelSync.DicomNode)</SourceLine>
+   <SourceLine>Sub AddTreeNode(tv As DesktopTreeView, parent As DesktopTreeViewNode, dNode As ModelSync.DicomNode)</SourceLine>
    <SourceLine>Var label As String = NodeLabel(dNode)</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>Var tNode As TreeView.DesktopTreeViewNode = tv.AddNode(parent, label)</SourceLine>
+   <SourceLine>Var tNode As DesktopTreeViewNode = tv.AddNode(parent, label)</SourceLine>
    <SourceLine>tNode.Tag = dNode</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>For Each child As ModelSync.DicomNode In dNode.Children</SourceLine>
@@ -418,7 +470,7 @@
   <AliasName></AliasName>
   <ItemFlags>33</ItemFlags>
   <IsShared>0</IsShared>
-  <ItemParams>tv As TreeView.DesktopTreeView, parent As TreeView.DesktopTreeViewNode, dNode As ModelSync.DicomNode</ItemParams>
+  <ItemParams>tv As DesktopTreeView, parent As DesktopTreeViewNode, dNode As ModelSync.DicomNode</ItemParams>
   <ItemResult></ItemResult>
  </Method>
  <Method>
@@ -428,11 +480,11 @@
   <PartID>1238560767</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub QueryCompleted(q as dcmtk.AQuery)</SourceLine>
+   <SourceLine>Sub QueryCompleted(q as AQuery)</SourceLine>
    <SourceLine>dim dics(-1) as Dictionary</SourceLine>
    <SourceLine>dim d as Dictionary</SourceLine>
    <SourceLine>dim n as dicom.ANode</SourceLine>
-   <SourceLine>dim subQuery as dcmtk.AQuery</SourceLine>
+   <SourceLine>dim subQuery as AQuery</SourceLine>
    <SourceLine>dim nextLevel as dicom.enumLEVELS</SourceLine>
    <SourceLine>dim studyReq as StudyRequest</SourceLine>
    <SourceLine>dim study as AStudy</SourceLine>
@@ -443,6 +495,7 @@
    <SourceLine>q.IsFinished = true</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>dics = q.ParseResults()</SourceLine>
+   <SourceLine>//LeftRoot  = ModelSync.LoadDicomTreeFromJSON(dics)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>select case q.mLevel</SourceLine>
    <SourceLine></SourceLine>
@@ -459,7 +512,7 @@
    <SourceLine></SourceLine>
    <SourceLine>studyReq.Children.Append(study)</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>subQuery = new dcmtk.AQuery</SourceLine>
+   <SourceLine>subQuery = new AQuery</SourceLine>
    <SourceLine>subQuery.Mode     = q.Mode</SourceLine>
    <SourceLine>subQuery.MyAET    = q.MyAET</SourceLine>
    <SourceLine>subQuery.QueryAET = q.QueryAET</SourceLine>
@@ -500,7 +553,7 @@
   <AliasName></AliasName>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
-  <ItemParams>q as dcmtk.AQuery</ItemParams>
+  <ItemParams>q as AQuery</ItemParams>
   <ItemResult></ItemResult>
  </Method>
  <Method>
@@ -540,6 +593,123 @@
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
   <ItemParams>study as AStudy</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>LayoutUI</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>511240191</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub LayoutUI()</SourceLine>
+   <SourceLine>// ===== constants you can tweak =====</SourceLine>
+   <SourceLine>Var outerMargin As Integer = 16</SourceLine>
+   <SourceLine>Var hGap As Integer = 12</SourceLine>
+   <SourceLine>Var vGap As Integer = 12</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Var rowGap As Integer = 10      // between row 1 and row 2, row 2 and row 3</SourceLine>
+   <SourceLine>// ==================================</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Heights (use design-time heights; clamp to sane minimums)</SourceLine>
+   <SourceLine>Var hSelf As Integer = SelfAEEndpointView.Height</SourceLine>
+   <SourceLine>If hSelf &lt; 48 Then hSelf = 48</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Var hLR As Integer = LeftAEEndpointView.Height</SourceLine>
+   <SourceLine>If hLR &lt; 48 Then hLR = 48</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Toolbar width (fixed column)</SourceLine>
+   <SourceLine>Var toolbarW As Integer = SyncToolbar1.Width</SourceLine>
+   <SourceLine>If toolbarW &lt; 56 Then toolbarW = 56</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// ----- Horizontal layout for row 2 + row 3 -----</SourceLine>
+   <SourceLine>Var availW As Integer = Self.Width - (outerMargin * 2) - (hGap * 2) - toolbarW</SourceLine>
+   <SourceLine>If availW &lt; 200 Then availW = 200</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Var paneW As Integer = availW \ 2</SourceLine>
+   <SourceLine>If paneW &lt; 200 Then paneW = 200</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Var leftX As Integer = outerMargin</SourceLine>
+   <SourceLine>Var toolbarX As Integer = leftX + paneW + hGap</SourceLine>
+   <SourceLine>Var rightX As Integer = toolbarX + toolbarW + hGap</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// ===== Row 1: Self endpoint (centered) =====</SourceLine>
+   <SourceLine>SelfAEEndpointView.Visible = True</SourceLine>
+   <SourceLine>SelfAEEndpointView.Height = hSelf</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Choose a width for Self: match paneW for symmetry (recommended)</SourceLine>
+   <SourceLine>Var selfW As Integer = paneW</SourceLine>
+   <SourceLine>Var maxSelfW As Integer = Self.Width - (outerMargin * 2)</SourceLine>
+   <SourceLine>If selfW &gt; maxSelfW Then selfW = maxSelfW</SourceLine>
+   <SourceLine>If selfW &lt; 240 Then selfW = 240</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>SelfAEEndpointView.Width = selfW</SourceLine>
+   <SourceLine>SelfAEEndpointView.Left = (Self.Width - selfW) \ 2</SourceLine>
+   <SourceLine>SelfAEEndpointView.Top = outerMargin</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// ===== Row 2: Left + Right endpoints =====</SourceLine>
+   <SourceLine>Var row2Top As Integer = SelfAEEndpointView.Top + SelfAEEndpointView.Height + rowGap</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>LeftAEEndpointView.Left = leftX</SourceLine>
+   <SourceLine>LeftAEEndpointView.Top = row2Top</SourceLine>
+   <SourceLine>LeftAEEndpointView.Width = paneW</SourceLine>
+   <SourceLine>LeftAEEndpointView.Height = hLR</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>RightAEEndpointView.Left = rightX</SourceLine>
+   <SourceLine>RightAEEndpointView.Top = row2Top</SourceLine>
+   <SourceLine>RightAEEndpointView.Width = paneW</SourceLine>
+   <SourceLine>RightAEEndpointView.Height = hLR</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// ===== Row 3: Trees + Toolbar =====</SourceLine>
+   <SourceLine>Var row3Top As Integer = row2Top + hLR + rowGap</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Var bottomH As Integer = Self.Height - row3Top - outerMargin</SourceLine>
+   <SourceLine>If bottomH &lt; 80 Then bottomH = 80</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>LeftTree.Left = leftX</SourceLine>
+   <SourceLine>LeftTree.Top = row3Top</SourceLine>
+   <SourceLine>LeftTree.Width = paneW</SourceLine>
+   <SourceLine>LeftTree.Height = bottomH</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>RightTree.Left = rightX</SourceLine>
+   <SourceLine>RightTree.Top = row3Top</SourceLine>
+   <SourceLine>RightTree.Width = paneW</SourceLine>
+   <SourceLine>RightTree.Height = bottomH</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>SyncToolbar1.Left = toolbarX</SourceLine>
+   <SourceLine>SyncToolbar1.Top = row3Top</SourceLine>
+   <SourceLine>SyncToolbar1.Width = toolbarW</SourceLine>
+   <SourceLine>SyncToolbar1.Height = bottomH</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>RunEchoSCU</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1960759295</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub RunEchoSCU(myAET as string, RemoteAET as String, host as String, port as String)</SourceLine>
+   <SourceLine>// Build command</SourceLine>
+   <SourceLine>// Example:</SourceLine>
+   <SourceLine>// echoscu -v -aec CALLED -aet CALLING host port</SourceLine>
+   <SourceLine>var echo as new AEcho()</SourceLine>
+   <SourceLine>echo.Echo(myAET, RemoteAET, host, port)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>myAET as string, RemoteAET as String, host as String, port as String</ItemParams>
   <ItemResult></ItemResult>
  </Method>
  <Property>
@@ -594,11 +764,11 @@
   <PartID>606300159</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mQueryPool(-1) As dcmtk.AQuery</SourceLine>
+   <SourceLine>mQueryPool(-1) As AQuery</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mQueryPool(-1) As dcmtk.AQuery</ItemDeclaration>
+  <ItemDeclaration>mQueryPool(-1) As AQuery</ItemDeclaration>
   <ItemFlags>33</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
@@ -619,14 +789,14 @@
  <PropertyVal Name="HasMinimizeButton">True</PropertyVal>
  <PropertyVal Name="HasMaximizeButton">True</PropertyVal>
  <PropertyVal Name="HasCloseButton">True</PropertyVal>
- <PropertyVal Name="Title">PACSync</PropertyVal>
+ <PropertyVal Name="Title">DICOM Commander</PropertyVal>
  <PropertyVal Name="Type">0</PropertyVal>
  <PropertyVal Name="MaximumHeight">32000</PropertyVal>
  <PropertyVal Name="MaximumWidth">32000</PropertyVal>
  <PropertyVal Name="MinimumHeight">64</PropertyVal>
  <PropertyVal Name="MinimumWidth">64</PropertyVal>
- <PropertyVal Name="Height">740</PropertyVal>
- <PropertyVal Name="Width">1000</PropertyVal>
+ <PropertyVal Name="Height">737</PropertyVal>
+ <PropertyVal Name="Width">1160</PropertyVal>
  <ViewBehavior>
   <ViewProperty>
    <ObjName>Name</ObjName>
@@ -840,56 +1010,76 @@
    <ItemType>Boolean</ItemType>
   </ViewProperty>
  </ViewBehavior>
+ <Using>
+  <ItemName>dcmtk</ItemName>
+ </Using>
+ <Using>
+  <ItemName>TreeView</ItemName>
+ </Using>
  <ControlBehavior>
-  <Superclass>TreeView.DesktopTreeView</Superclass>
+  <Superclass>DesktopTreeView</Superclass>
  </ControlBehavior>
  <ControlBehavior>
-  <Superclass>TreeView.DesktopTreeView</Superclass>
+  <Superclass>DesktopTreeView</Superclass>
  </ControlBehavior>
  <ControlBehavior>
   <Superclass>AEEndpointView</Superclass>
- </ControlBehavior>
- <ControlBehavior>
-  <Superclass>AEEndpointView</Superclass>
- </ControlBehavior>
- <ControlBehavior>
-  <Superclass>AEEndpointView</Superclass>
- </ControlBehavior>
- <ControlBehavior>
-  <Superclass>DesktopButton</Superclass>
   <HookInstance>
-   <ItemName>Pressed</ItemName>
+   <ItemName>Echo</ItemName>
    <Compatibility></Compatibility>
    <Visible>1</Visible>
-   <PartID>1707513855</PartID>
+   <PartID>92489727</PartID>
    <ItemSource>
     <TextEncoding>134217984</TextEncoding>
-    <SourceLine>Sub Pressed()</SourceLine>
-    <SourceLine>dim sr as StudyRequest</SourceLine>
-    <SourceLine>dim MyQuery as dcmtk.AQuery</SourceLine>
-    <SourceLine></SourceLine>
-    <SourceLine>for each sr in StudyRequests</SourceLine>
-    <SourceLine></SourceLine>
-    <SourceLine>MyQuery = new dcmtk.AQuery</SourceLine>
-    <SourceLine>MyQuery.Mode = 1</SourceLine>
-    <SourceLine>MyQuery.MyAET = "PACSYNC"</SourceLine>
-    <SourceLine>MyQuery.QueryAET = "MicMac"</SourceLine>
-    <SourceLine>MyQuery.Host="MicMac.local"</SourceLine>
-    <SourceLine>MyQuery.Port = 11112</SourceLine>
-    <SourceLine>MyQuery.Query(dicom.enumROOTS.STUDY, dicom.enumLEVELS.STUDY, sr.AsDictionary, AStudy.QueryGetKeys, sr)</SourceLine>
-    <SourceLine></SourceLine>
-    <SourceLine>mQueryPool.Append(MyQuery)</SourceLine>
-    <SourceLine></SourceLine>
-    <SourceLine>next</SourceLine>
-    <SourceLine></SourceLine>
-    <SourceLine>if QueryPoolTimer.Enabled = false then QueryPoolTimer.Enabled = true</SourceLine>
-    <SourceLine></SourceLine>
-    <SourceLine>'ShellTest.Mode = 1</SourceLine>
-    <SourceLine>'ShellTest.Execute("echo HELLO WORLD")</SourceLine>
+    <SourceLine>Sub Echo(aet as string, host as string, port as string)</SourceLine>
+    <SourceLine>RunEchoSCU(aet, SelfAEEndpointView.AET, host, port)</SourceLine>
     <SourceLine></SourceLine>
     <SourceLine>End Sub</SourceLine>
    </ItemSource>
   </HookInstance>
+  <HookInstance>
+   <ItemName>Query</ItemName>
+   <Compatibility></Compatibility>
+   <Visible>1</Visible>
+   <PartID>376518655</PartID>
+   <ItemSource>
+    <TextEncoding>134217984</TextEncoding>
+    <SourceLine>Sub Query(aet as string, host as string, port as string)</SourceLine>
+    <SourceLine></SourceLine>
+    <SourceLine>End Sub</SourceLine>
+   </ItemSource>
+  </HookInstance>
+ </ControlBehavior>
+ <ControlBehavior>
+  <Superclass>AEEndpointView</Superclass>
+  <HookInstance>
+   <ItemName>Echo</ItemName>
+   <Compatibility></Compatibility>
+   <Visible>1</Visible>
+   <PartID>163510271</PartID>
+   <ItemSource>
+    <TextEncoding>134217984</TextEncoding>
+    <SourceLine>Sub Echo(aet as string, host as string, port as string)</SourceLine>
+    <SourceLine>MessageBox("Echo")</SourceLine>
+    <SourceLine></SourceLine>
+    <SourceLine>End Sub</SourceLine>
+   </ItemSource>
+  </HookInstance>
+  <HookInstance>
+   <ItemName>Query</ItemName>
+   <Compatibility></Compatibility>
+   <Visible>1</Visible>
+   <PartID>2115301375</PartID>
+   <ItemSource>
+    <TextEncoding>134217984</TextEncoding>
+    <SourceLine>Sub Query(aet as string, host as string, port as string)</SourceLine>
+    <SourceLine></SourceLine>
+    <SourceLine>End Sub</SourceLine>
+   </ItemSource>
+  </HookInstance>
+ </ControlBehavior>
+ <ControlBehavior>
+  <Superclass>AEEndpointView</Superclass>
  </ControlBehavior>
  <ControlBehavior>
   <Superclass>Timer</Superclass>
@@ -970,6 +1160,27 @@
    <ItemSource>
     <TextEncoding>134217984</TextEncoding>
     <SourceLine>Sub StartEvent()</SourceLine>
+    <SourceLine>dim sr as StudyRequest</SourceLine>
+    <SourceLine>dim MyQuery as AQuery</SourceLine>
+    <SourceLine></SourceLine>
+    <SourceLine>for each sr in StudyRequests</SourceLine>
+    <SourceLine></SourceLine>
+    <SourceLine>MyQuery = new AQuery</SourceLine>
+    <SourceLine>MyQuery.Mode = 1</SourceLine>
+    <SourceLine>MyQuery.MyAET = "PACSYNC"</SourceLine>
+    <SourceLine>MyQuery.QueryAET = "MicMac"</SourceLine>
+    <SourceLine>MyQuery.Host="MicMac.local"</SourceLine>
+    <SourceLine>MyQuery.Port = 11112</SourceLine>
+    <SourceLine>MyQuery.Query(dicom.enumROOTS.STUDY, dicom.enumLEVELS.STUDY, sr.AsDictionary, AStudy.QueryGetKeys, sr)</SourceLine>
+    <SourceLine></SourceLine>
+    <SourceLine>mQueryPool.Append(MyQuery)</SourceLine>
+    <SourceLine></SourceLine>
+    <SourceLine>next</SourceLine>
+    <SourceLine></SourceLine>
+    <SourceLine>if QueryPoolTimer.Enabled = false then QueryPoolTimer.Enabled = true</SourceLine>
+    <SourceLine></SourceLine>
+    <SourceLine>'ShellTest.Mode = 1</SourceLine>
+    <SourceLine>'ShellTest.Execute("echo HELLO WORLD")</SourceLine>
     <SourceLine></SourceLine>
     <SourceLine>End Sub</SourceLine>
    </ItemSource>
@@ -1029,109 +1240,31 @@
   </HookInstance>
  </ControlBehavior>
  <Control>
-  <ControlClass>TreeView.DesktopTreeView</ControlClass>
-  <ItemName>TreeView.DesktopTreeView</ItemName>
-  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
-  <PropertyVal Name="AllowAutoHideScrollbars">True</PropertyVal>
-  <PropertyVal Name="AllowExpandableRows">False</PropertyVal>
-  <PropertyVal Name="AllowFocusRing">True</PropertyVal>
-  <PropertyVal Name="AllowResizableColumns">False</PropertyVal>
-  <PropertyVal Name="AllowRowDragging">False</PropertyVal>
-  <PropertyVal Name="AllowRowReordering">False</PropertyVal>
-  <PropertyVal Name="Bold">False</PropertyVal>
-  <PropertyVal Name="ColumnCount">1</PropertyVal>
-  <PropertyVal Name="ColumnWidths"></PropertyVal>
-  <PropertyVal Name="DefaultRowHeight">-1</PropertyVal>
-  <PropertyVal Name="DropIndicatorVisible">False</PropertyVal>
-  <PropertyVal Name="Enabled">True</PropertyVal>
-  <PropertyVal Name="FontName">System</PropertyVal>
-  <PropertyVal Name="FontSize">0.0</PropertyVal>
-  <PropertyVal Name="FontUnit">0</PropertyVal>
-  <PropertyVal Name="GridLineStyle">0</PropertyVal>
-  <PropertyVal Name="HasBorder">True</PropertyVal>
-  <PropertyVal Name="HasHeader">False</PropertyVal>
-  <PropertyVal Name="HasHorizontalScrollbar">False</PropertyVal>
-  <PropertyVal Name="HasVerticalScrollbar">True</PropertyVal>
-  <PropertyVal Name="HeadingIndex">-1</PropertyVal>
-  <PropertyVal Name="Height">504</PropertyVal>
+  <ControlClass>DesktopTreeView</ControlClass>
+  <ItemName>DesktopTreeView</ItemName>
+  <PropertyVal Name="Height">32</PropertyVal>
   <PropertyVal Name="Index">-2147483648</PropertyVal>
-  <PropertyVal Name="InitialValue"></PropertyVal>
-  <PropertyVal Name="Italic">False</PropertyVal>
   <PropertyVal Name="Left">20</PropertyVal>
-  <PropertyVal Name="LockBottom">False</PropertyVal>
-  <PropertyVal Name="LockLeft">True</PropertyVal>
-  <PropertyVal Name="LockRight">False</PropertyVal>
-  <PropertyVal Name="LockTop">True</PropertyVal>
   <PropertyVal Name="Name">LeftTree</PropertyVal>
-  <PropertyVal Name="RequiresSelection">False</PropertyVal>
-  <PropertyVal Name="RowSelectionType">0</PropertyVal>
-  <PropertyVal Name="Scope">0</PropertyVal>
-  <PropertyVal Name="Super">TreeView.DesktopTreeView</PropertyVal>
-  <PropertyVal Name="TabIndex">0</PropertyVal>
+  <PropertyVal Name="Super">DesktopTreeView</PropertyVal>
   <PropertyVal Name="TabPanelIndex">0</PropertyVal>
-  <PropertyVal Name="TabStop">True</PropertyVal>
-  <PropertyVal Name="Tooltip"></PropertyVal>
   <PropertyVal Name="Top">213</PropertyVal>
-  <PropertyVal Name="Transparent">False</PropertyVal>
-  <PropertyVal Name="Underline">False</PropertyVal>
-  <PropertyVal Name="Visible">True</PropertyVal>
-  <PropertyVal Name="Width">429</PropertyVal>
-  <PropertyVal Name="_ScrollOffset">0</PropertyVal>
-  <PropertyVal Name="_ScrollWidth">-1</PropertyVal>
+  <PropertyVal Name="Width">32</PropertyVal>
   <ControlIndex>0</ControlIndex>
   <Locked>0</Locked>
   <PartID>1783021567</PartID>
  </Control>
  <Control>
-  <ControlClass>TreeView.DesktopTreeView</ControlClass>
-  <ItemName>TreeView.DesktopTreeView</ItemName>
-  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
-  <PropertyVal Name="AllowAutoHideScrollbars">True</PropertyVal>
-  <PropertyVal Name="AllowExpandableRows">False</PropertyVal>
-  <PropertyVal Name="AllowFocusRing">True</PropertyVal>
-  <PropertyVal Name="AllowResizableColumns">False</PropertyVal>
-  <PropertyVal Name="AllowRowDragging">False</PropertyVal>
-  <PropertyVal Name="AllowRowReordering">False</PropertyVal>
-  <PropertyVal Name="Bold">False</PropertyVal>
-  <PropertyVal Name="ColumnCount">1</PropertyVal>
-  <PropertyVal Name="ColumnWidths"></PropertyVal>
-  <PropertyVal Name="DefaultRowHeight">-1</PropertyVal>
-  <PropertyVal Name="DropIndicatorVisible">False</PropertyVal>
-  <PropertyVal Name="Enabled">True</PropertyVal>
-  <PropertyVal Name="FontName">System</PropertyVal>
-  <PropertyVal Name="FontSize">0.0</PropertyVal>
-  <PropertyVal Name="FontUnit">0</PropertyVal>
-  <PropertyVal Name="GridLineStyle">0</PropertyVal>
-  <PropertyVal Name="HasBorder">True</PropertyVal>
-  <PropertyVal Name="HasHeader">False</PropertyVal>
-  <PropertyVal Name="HasHorizontalScrollbar">False</PropertyVal>
-  <PropertyVal Name="HasVerticalScrollbar">True</PropertyVal>
-  <PropertyVal Name="HeadingIndex">-1</PropertyVal>
-  <PropertyVal Name="Height">508</PropertyVal>
+  <ControlClass>DesktopTreeView</ControlClass>
+  <ItemName>DesktopTreeView</ItemName>
+  <PropertyVal Name="Height">32</PropertyVal>
   <PropertyVal Name="Index">-2147483648</PropertyVal>
-  <PropertyVal Name="InitialValue"></PropertyVal>
-  <PropertyVal Name="Italic">False</PropertyVal>
-  <PropertyVal Name="Left">556</PropertyVal>
-  <PropertyVal Name="LockBottom">False</PropertyVal>
-  <PropertyVal Name="LockLeft">True</PropertyVal>
-  <PropertyVal Name="LockRight">False</PropertyVal>
-  <PropertyVal Name="LockTop">True</PropertyVal>
+  <PropertyVal Name="Left">628</PropertyVal>
   <PropertyVal Name="Name">RightTree</PropertyVal>
-  <PropertyVal Name="RequiresSelection">False</PropertyVal>
-  <PropertyVal Name="RowSelectionType">0</PropertyVal>
-  <PropertyVal Name="Scope">0</PropertyVal>
-  <PropertyVal Name="Super">TreeView.DesktopTreeView</PropertyVal>
-  <PropertyVal Name="TabIndex">0</PropertyVal>
+  <PropertyVal Name="Super">DesktopTreeView</PropertyVal>
   <PropertyVal Name="TabPanelIndex">0</PropertyVal>
-  <PropertyVal Name="TabStop">True</PropertyVal>
-  <PropertyVal Name="Tooltip"></PropertyVal>
   <PropertyVal Name="Top">213</PropertyVal>
-  <PropertyVal Name="Transparent">False</PropertyVal>
-  <PropertyVal Name="Underline">False</PropertyVal>
-  <PropertyVal Name="Visible">True</PropertyVal>
-  <PropertyVal Name="Width">424</PropertyVal>
-  <PropertyVal Name="_ScrollOffset">0</PropertyVal>
-  <PropertyVal Name="_ScrollWidth">-1</PropertyVal>
+  <PropertyVal Name="Width">32</PropertyVal>
   <ControlIndex>1</ControlIndex>
   <Locked>0</Locked>
   <PartID>1570492415</PartID>
@@ -1139,6 +1272,7 @@
  <Control>
   <ControlClass>AEEndpointView</ControlClass>
   <ItemName>AEEndpointView</ItemName>
+  <PropertyVal Name="AET"></PropertyVal>
   <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
   <PropertyVal Name="AllowFocus">False</PropertyVal>
   <PropertyVal Name="AllowFocusRing">False</PropertyVal>
@@ -1148,15 +1282,17 @@
   <PropertyVal Name="Composited">False</PropertyVal>
   <PropertyVal Name="Enabled">True</PropertyVal>
   <PropertyVal Name="HasBackgroundColor">False</PropertyVal>
-  <PropertyVal Name="Height">80</PropertyVal>
+  <PropertyVal Name="Height">77</PropertyVal>
+  <PropertyVal Name="Host"></PropertyVal>
   <PropertyVal Name="Index">-2147483648</PropertyVal>
   <PropertyVal Name="InitialParent"></PropertyVal>
   <PropertyVal Name="Left">20</PropertyVal>
-  <PropertyVal Name="LockBottom">True</PropertyVal>
+  <PropertyVal Name="LockBottom">False</PropertyVal>
   <PropertyVal Name="LockLeft">True</PropertyVal>
-  <PropertyVal Name="LockRight">True</PropertyVal>
+  <PropertyVal Name="LockRight">False</PropertyVal>
   <PropertyVal Name="LockTop">True</PropertyVal>
   <PropertyVal Name="Name">LeftAEEndpointView</PropertyVal>
+  <PropertyVal Name="Port"></PropertyVal>
   <PropertyVal Name="Scope">0</PropertyVal>
   <PropertyVal Name="Super">AEEndpointView</PropertyVal>
   <PropertyVal Name="TabIndex">3</PropertyVal>
@@ -1166,7 +1302,7 @@
   <PropertyVal Name="Top">120</PropertyVal>
   <PropertyVal Name="Transparent">False</PropertyVal>
   <PropertyVal Name="Visible">True</PropertyVal>
-  <PropertyVal Name="Width">429</PropertyVal>
+  <PropertyVal Name="Width">512</PropertyVal>
   <ControlIndex>2</ControlIndex>
   <Locked>0</Locked>
   <PartID>1383090175</PartID>
@@ -1174,6 +1310,7 @@
  <Control>
   <ControlClass>AEEndpointView</ControlClass>
   <ItemName>AEEndpointView</ItemName>
+  <PropertyVal Name="AET"></PropertyVal>
   <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
   <PropertyVal Name="AllowFocus">False</PropertyVal>
   <PropertyVal Name="AllowFocusRing">False</PropertyVal>
@@ -1183,15 +1320,17 @@
   <PropertyVal Name="Composited">False</PropertyVal>
   <PropertyVal Name="Enabled">True</PropertyVal>
   <PropertyVal Name="HasBackgroundColor">False</PropertyVal>
-  <PropertyVal Name="Height">80</PropertyVal>
+  <PropertyVal Name="Height">77</PropertyVal>
+  <PropertyVal Name="Host"></PropertyVal>
   <PropertyVal Name="Index">-2147483648</PropertyVal>
   <PropertyVal Name="InitialParent"></PropertyVal>
-  <PropertyVal Name="Left">556</PropertyVal>
-  <PropertyVal Name="LockBottom">True</PropertyVal>
-  <PropertyVal Name="LockLeft">True</PropertyVal>
+  <PropertyVal Name="Left">628</PropertyVal>
+  <PropertyVal Name="LockBottom">False</PropertyVal>
+  <PropertyVal Name="LockLeft">False</PropertyVal>
   <PropertyVal Name="LockRight">True</PropertyVal>
   <PropertyVal Name="LockTop">True</PropertyVal>
   <PropertyVal Name="Name">RightAEEndpointView</PropertyVal>
+  <PropertyVal Name="Port"></PropertyVal>
   <PropertyVal Name="Scope">0</PropertyVal>
   <PropertyVal Name="Super">AEEndpointView</PropertyVal>
   <PropertyVal Name="TabIndex">4</PropertyVal>
@@ -1201,7 +1340,7 @@
   <PropertyVal Name="Top">120</PropertyVal>
   <PropertyVal Name="Transparent">False</PropertyVal>
   <PropertyVal Name="Visible">True</PropertyVal>
-  <PropertyVal Name="Width">424</PropertyVal>
+  <PropertyVal Name="Width">512</PropertyVal>
   <ControlIndex>3</ControlIndex>
   <Locked>0</Locked>
   <PartID>826226687</PartID>
@@ -1209,6 +1348,7 @@
  <Control>
   <ControlClass>AEEndpointView</ControlClass>
   <ItemName>AEEndpointView</ItemName>
+  <PropertyVal Name="AET"></PropertyVal>
   <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
   <PropertyVal Name="AllowFocus">False</PropertyVal>
   <PropertyVal Name="AllowFocusRing">False</PropertyVal>
@@ -1218,15 +1358,17 @@
   <PropertyVal Name="Composited">False</PropertyVal>
   <PropertyVal Name="Enabled">True</PropertyVal>
   <PropertyVal Name="HasBackgroundColor">False</PropertyVal>
-  <PropertyVal Name="Height">80</PropertyVal>
+  <PropertyVal Name="Height">77</PropertyVal>
+  <PropertyVal Name="Host"></PropertyVal>
   <PropertyVal Name="Index">-2147483648</PropertyVal>
   <PropertyVal Name="InitialParent"></PropertyVal>
-  <PropertyVal Name="Left">291</PropertyVal>
-  <PropertyVal Name="LockBottom">True</PropertyVal>
+  <PropertyVal Name="Left">333</PropertyVal>
+  <PropertyVal Name="LockBottom">False</PropertyVal>
   <PropertyVal Name="LockLeft">True</PropertyVal>
   <PropertyVal Name="LockRight">True</PropertyVal>
   <PropertyVal Name="LockTop">True</PropertyVal>
   <PropertyVal Name="Name">SelfAEEndpointView</PropertyVal>
+  <PropertyVal Name="Port"></PropertyVal>
   <PropertyVal Name="Scope">0</PropertyVal>
   <PropertyVal Name="Super">AEEndpointView</PropertyVal>
   <PropertyVal Name="TabIndex">5</PropertyVal>
@@ -1236,47 +1378,10 @@
   <PropertyVal Name="Top">20</PropertyVal>
   <PropertyVal Name="Transparent">False</PropertyVal>
   <PropertyVal Name="Visible">True</PropertyVal>
-  <PropertyVal Name="Width">429</PropertyVal>
+  <PropertyVal Name="Width">512</PropertyVal>
   <ControlIndex>4</ControlIndex>
   <Locked>0</Locked>
   <PartID>273862655</PartID>
- </Control>
- <Control>
-  <ControlClass>DesktopButton</ControlClass>
-  <ItemName>DesktopButton</ItemName>
-  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
-  <PropertyVal Name="Bold">False</PropertyVal>
-  <PropertyVal Name="Cancel">False</PropertyVal>
-  <PropertyVal Name="Caption">Test</PropertyVal>
-  <PropertyVal Name="Default">True</PropertyVal>
-  <PropertyVal Name="Enabled">True</PropertyVal>
-  <PropertyVal Name="FontName">System</PropertyVal>
-  <PropertyVal Name="FontSize">0.0</PropertyVal>
-  <PropertyVal Name="FontUnit">0</PropertyVal>
-  <PropertyVal Name="Height">26</PropertyVal>
-  <PropertyVal Name="Index">-2147483648</PropertyVal>
-  <PropertyVal Name="Italic">False</PropertyVal>
-  <PropertyVal Name="Left">20</PropertyVal>
-  <PropertyVal Name="LockBottom">False</PropertyVal>
-  <PropertyVal Name="LockLeft">True</PropertyVal>
-  <PropertyVal Name="LockRight">False</PropertyVal>
-  <PropertyVal Name="LockTop">True</PropertyVal>
-  <PropertyVal Name="MacButtonStyle">0</PropertyVal>
-  <PropertyVal Name="Name">TestButton</PropertyVal>
-  <PropertyVal Name="Scope">2</PropertyVal>
-  <PropertyVal Name="Super">DesktopButton</PropertyVal>
-  <PropertyVal Name="TabIndex">6</PropertyVal>
-  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
-  <PropertyVal Name="TabStop">True</PropertyVal>
-  <PropertyVal Name="Tooltip"></PropertyVal>
-  <PropertyVal Name="Top">74</PropertyVal>
-  <PropertyVal Name="Transparent">False</PropertyVal>
-  <PropertyVal Name="Underline">False</PropertyVal>
-  <PropertyVal Name="Visible">True</PropertyVal>
-  <PropertyVal Name="Width">80</PropertyVal>
-  <ControlIndex>5</ControlIndex>
-  <Locked>0</Locked>
-  <PartID>1365401599</PartID>
  </Control>
  <Control>
   <ControlClass>Timer</ControlClass>
@@ -1288,7 +1393,7 @@
   <PropertyVal Name="Scope">2</PropertyVal>
   <PropertyVal Name="Super">Timer</PropertyVal>
   <PropertyVal Name="TabPanelIndex">0</PropertyVal>
-  <ControlIndex>6</ControlIndex>
+  <ControlIndex>5</ControlIndex>
   <Locked>0</Locked>
   <PartID>2000728063</PartID>
  </Control>
@@ -1304,11 +1409,11 @@
   <PropertyVal Name="Composited">False</PropertyVal>
   <PropertyVal Name="Enabled">True</PropertyVal>
   <PropertyVal Name="HasBackgroundColor">False</PropertyVal>
-  <PropertyVal Name="Height">292</PropertyVal>
+  <PropertyVal Name="Height">513</PropertyVal>
   <PropertyVal Name="Index">-2147483648</PropertyVal>
   <PropertyVal Name="InitialParent"></PropertyVal>
-  <PropertyVal Name="Left">464</PropertyVal>
-  <PropertyVal Name="LockBottom">False</PropertyVal>
+  <PropertyVal Name="Left">544</PropertyVal>
+  <PropertyVal Name="LockBottom">True</PropertyVal>
   <PropertyVal Name="LockLeft">True</PropertyVal>
   <PropertyVal Name="LockRight">False</PropertyVal>
   <PropertyVal Name="LockTop">True</PropertyVal>
@@ -1319,11 +1424,11 @@
   <PropertyVal Name="TabPanelIndex">0</PropertyVal>
   <PropertyVal Name="TabStop">True</PropertyVal>
   <PropertyVal Name="Tooltip"></PropertyVal>
-  <PropertyVal Name="Top">308</PropertyVal>
+  <PropertyVal Name="Top">213</PropertyVal>
   <PropertyVal Name="Transparent">False</PropertyVal>
   <PropertyVal Name="Visible">True</PropertyVal>
   <PropertyVal Name="Width">72</PropertyVal>
-  <ControlIndex>7</ControlIndex>
+  <ControlIndex>6</ControlIndex>
   <Locked>0</Locked>
   <PartID>983382015</PartID>
  </Control>
@@ -2493,1296 +2598,11 @@
   </ViewProperty>
  </ViewBehavior>
 </block>
-<block type="DesktopWindow" ID="1471320063">
- <ObjName>AEEndpointView</ObjName>
- <ObjContainerID>0</ObjContainerID>
- <IsClass>1</IsClass>
- <Superclass>DesktopContainer</Superclass>
- <ItemFlags>1</ItemFlags>
- <IsInterface>0</IsInterface>
- <Compatibility></Compatibility>
- <Hook>
-  <ItemName>Echo</ItemName>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>33</ItemFlags>
-  <SystemFlags>0</SystemFlags>
-  <ItemParams>aet as string, host as string, port as string</ItemParams>
-  <ItemResult></ItemResult>
- </Hook>
- <Property>
-  <ItemName>Host</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>887089151</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Property Host As String</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>Host As String</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <SetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Set</SourceLine>
-   <SourceLine>AETTextBox.Text  = value</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>End Set</SourceLine>
-  </SetAccessor>
-  <GetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Get</SourceLine>
-   <SourceLine>return HostTextBox.Text</SourceLine>
-   <SourceLine>End Get</SourceLine>
-  </GetAccessor>
- </Property>
- <Property>
-  <ItemName>Port</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1385998335</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Property Port As String</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>Port As String</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <SetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Set</SourceLine>
-   <SourceLine>PortTextBox.Text = value</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>End Set</SourceLine>
-  </SetAccessor>
-  <GetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Get</SourceLine>
-   <SourceLine>return PortTextBox.Text</SourceLine>
-   <SourceLine>End Get</SourceLine>
-  </GetAccessor>
- </Property>
- <Property>
-  <ItemName>AET</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>382975999</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Property AET As String</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>AET As String</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <SetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Set</SourceLine>
-   <SourceLine>PortTextBox.Text = value</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>End Set</SourceLine>
-  </SetAccessor>
-  <GetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Get</SourceLine>
-   <SourceLine>return AETTextBox.Text</SourceLine>
-   <SourceLine>End Get</SourceLine>
-  </GetAccessor>
- </Property>
- <PropertyVal Name="Composited">False</PropertyVal>
- <PropertyVal Name="Transparent">False</PropertyVal>
- <PropertyVal Name="AllowTabs">True</PropertyVal>
- <PropertyVal Name="AllowFocus">False</PropertyVal>
- <PropertyVal Name="HasBackgroundColor">False</PropertyVal>
- <PropertyVal Name="Backdrop">0</PropertyVal>
- <PropertyVal Name="BackgroundColor">&amp;hFFFFFF</PropertyVal>
- <PropertyVal Name="Visible">True</PropertyVal>
- <PropertyVal Name="AllowFocusRing">False</PropertyVal>
- <PropertyVal Name="Tooltip"></PropertyVal>
- <PropertyVal Name="Enabled">True</PropertyVal>
- <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
- <PropertyVal Name="TabStop">True</PropertyVal>
- <PropertyVal Name="TabPanelIndex">0</PropertyVal>
- <PropertyVal Name="TabIndex">0</PropertyVal>
- <PropertyVal Name="LockBottom">True</PropertyVal>
- <PropertyVal Name="LockRight">True</PropertyVal>
- <PropertyVal Name="LockTop">True</PropertyVal>
- <PropertyVal Name="LockLeft">False</PropertyVal>
- <PropertyVal Name="Top">0</PropertyVal>
- <PropertyVal Name="Left">0</PropertyVal>
- <PropertyVal Name="InitialParent"></PropertyVal>
- <PropertyVal Name="Height">72</PropertyVal>
- <PropertyVal Name="Width">484</PropertyVal>
- <PropertyVal Name="Index">-2147483648</PropertyVal>
- <ViewBehavior>
-  <ViewProperty>
-   <ObjName>Name</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Super</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Index</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <PropertyValue>-2147483648</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Width</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Size</PropertyGroup>
-   <PropertyValue>300</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Height</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Size</PropertyGroup>
-   <PropertyValue>300</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>InitialParent</ObjName>
-   <PropertyGroup>Position</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Left</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Top</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>LockLeft</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>True</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>LockTop</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>True</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>LockRight</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>False</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>LockBottom</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>False</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>TabIndex</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>TabPanelIndex</ObjName>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>TabStop</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>True</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>AllowAutoDeactivate</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Appearance</PropertyGroup>
-   <PropertyValue>True</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Enabled</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Appearance</PropertyGroup>
-   <PropertyValue>True</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Tooltip</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Appearance</PropertyGroup>
-   <ItemType>String</ItemType>
-   <EditorType>MultiLineEditor</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>AllowFocusRing</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Appearance</PropertyGroup>
-   <PropertyValue>False</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Visible</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Appearance</PropertyGroup>
-   <PropertyValue>True</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>BackgroundColor</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Background</PropertyGroup>
-   <PropertyValue>&amp;hFFFFFF</PropertyValue>
-   <ItemType>ColorGroup</ItemType>
-   <EditorType>ColorGroup</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Backdrop</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Background</PropertyGroup>
-   <ItemType>Picture</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>HasBackgroundColor</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Background</PropertyGroup>
-   <PropertyValue>False</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>AllowFocus</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <PropertyValue>False</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>AllowTabs</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <PropertyValue>True</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Transparent</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <PropertyValue>False</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Composited</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Window Behavior</PropertyGroup>
-   <PropertyValue>False</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
- </ViewBehavior>
- <ControlBehavior>
-  <Superclass>DesktopLabel</Superclass>
- </ControlBehavior>
- <ControlBehavior>
-  <Superclass>DesktopLabel</Superclass>
- </ControlBehavior>
- <ControlBehavior>
-  <Superclass>DesktopLabel</Superclass>
- </ControlBehavior>
- <ControlBehavior>
-  <Superclass>DesktopTextField</Superclass>
- </ControlBehavior>
- <ControlBehavior>
-  <Superclass>DesktopTextField</Superclass>
- </ControlBehavior>
- <ControlBehavior>
-  <Superclass>DesktopTextField</Superclass>
- </ControlBehavior>
- <ControlBehavior>
-  <Superclass>DesktopBevelButton</Superclass>
-  <HookInstance>
-   <ItemName>Pressed</ItemName>
-   <Compatibility></Compatibility>
-   <Visible>1</Visible>
-   <PartID>273061887</PartID>
-   <ItemSource>
-    <TextEncoding>134217984</TextEncoding>
-    <SourceLine>Sub Pressed()</SourceLine>
-    <SourceLine>RaiseEvent Echo(AET, Host, Port)</SourceLine>
-    <SourceLine></SourceLine>
-    <SourceLine>End Sub</SourceLine>
-   </ItemSource>
-  </HookInstance>
- </ControlBehavior>
- <Control>
-  <ControlClass>DesktopLabel</ControlClass>
-  <ItemName>DesktopLabel</ItemName>
-  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
-  <PropertyVal Name="Bold">False</PropertyVal>
-  <PropertyVal Name="Enabled">True</PropertyVal>
-  <PropertyVal Name="FontName">System</PropertyVal>
-  <PropertyVal Name="FontSize">0.0</PropertyVal>
-  <PropertyVal Name="FontUnit">0</PropertyVal>
-  <PropertyVal Name="Height">20</PropertyVal>
-  <PropertyVal Name="Index">-2147483648</PropertyVal>
-  <PropertyVal Name="Italic">False</PropertyVal>
-  <PropertyVal Name="Left">13</PropertyVal>
-  <PropertyVal Name="LockBottom">True</PropertyVal>
-  <PropertyVal Name="LockLeft">True</PropertyVal>
-  <PropertyVal Name="LockRight">False</PropertyVal>
-  <PropertyVal Name="LockTop">False</PropertyVal>
-  <PropertyVal Name="Multiline">False</PropertyVal>
-  <PropertyVal Name="Name">Label1</PropertyVal>
-  <PropertyVal Name="Scope">0</PropertyVal>
-  <PropertyVal Name="Selectable">False</PropertyVal>
-  <PropertyVal Name="Super">DesktopLabel</PropertyVal>
-  <PropertyVal Name="TabIndex">0</PropertyVal>
-  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
-  <PropertyVal Name="TabStop">True</PropertyVal>
-  <PropertyVal Name="Text">AE Title</PropertyVal>
-  <PropertyVal Name="TextAlignment">0</PropertyVal>
-  <PropertyVal Name="TextColor">&amp;h000000</PropertyVal>
-  <PropertyVal Name="Tooltip"></PropertyVal>
-  <PropertyVal Name="Top">27</PropertyVal>
-  <PropertyVal Name="Transparent">False</PropertyVal>
-  <PropertyVal Name="Underline">False</PropertyVal>
-  <PropertyVal Name="Visible">True</PropertyVal>
-  <PropertyVal Name="Width">50</PropertyVal>
-  <ControlIndex>0</ControlIndex>
-  <Locked>1</Locked>
-  <PartID>387604479</PartID>
- </Control>
- <Control>
-  <ControlClass>DesktopLabel</ControlClass>
-  <ItemName>DesktopLabel</ItemName>
-  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
-  <PropertyVal Name="Bold">False</PropertyVal>
-  <PropertyVal Name="Enabled">True</PropertyVal>
-  <PropertyVal Name="FontName">System</PropertyVal>
-  <PropertyVal Name="FontSize">0.0</PropertyVal>
-  <PropertyVal Name="FontUnit">0</PropertyVal>
-  <PropertyVal Name="Height">20</PropertyVal>
-  <PropertyVal Name="Index">-2147483648</PropertyVal>
-  <PropertyVal Name="Italic">False</PropertyVal>
-  <PropertyVal Name="Left">158</PropertyVal>
-  <PropertyVal Name="LockBottom">True</PropertyVal>
-  <PropertyVal Name="LockLeft">True</PropertyVal>
-  <PropertyVal Name="LockRight">False</PropertyVal>
-  <PropertyVal Name="LockTop">False</PropertyVal>
-  <PropertyVal Name="Multiline">False</PropertyVal>
-  <PropertyVal Name="Name">Label2</PropertyVal>
-  <PropertyVal Name="Scope">0</PropertyVal>
-  <PropertyVal Name="Selectable">False</PropertyVal>
-  <PropertyVal Name="Super">DesktopLabel</PropertyVal>
-  <PropertyVal Name="TabIndex">1</PropertyVal>
-  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
-  <PropertyVal Name="TabStop">True</PropertyVal>
-  <PropertyVal Name="Text">Host</PropertyVal>
-  <PropertyVal Name="TextAlignment">0</PropertyVal>
-  <PropertyVal Name="TextColor">&amp;h000000</PropertyVal>
-  <PropertyVal Name="Tooltip"></PropertyVal>
-  <PropertyVal Name="Top">27</PropertyVal>
-  <PropertyVal Name="Transparent">False</PropertyVal>
-  <PropertyVal Name="Underline">False</PropertyVal>
-  <PropertyVal Name="Visible">True</PropertyVal>
-  <PropertyVal Name="Width">50</PropertyVal>
-  <ControlIndex>1</ControlIndex>
-  <Locked>1</Locked>
-  <PartID>1233162239</PartID>
- </Control>
- <Control>
-  <ControlClass>DesktopLabel</ControlClass>
-  <ItemName>DesktopLabel</ItemName>
-  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
-  <PropertyVal Name="Bold">False</PropertyVal>
-  <PropertyVal Name="Enabled">True</PropertyVal>
-  <PropertyVal Name="FontName">System</PropertyVal>
-  <PropertyVal Name="FontSize">0.0</PropertyVal>
-  <PropertyVal Name="FontUnit">0</PropertyVal>
-  <PropertyVal Name="Height">20</PropertyVal>
-  <PropertyVal Name="Index">-2147483648</PropertyVal>
-  <PropertyVal Name="InitialParent"></PropertyVal>
-  <PropertyVal Name="Italic">False</PropertyVal>
-  <PropertyVal Name="Left">294</PropertyVal>
-  <PropertyVal Name="LockBottom">True</PropertyVal>
-  <PropertyVal Name="LockLeft">True</PropertyVal>
-  <PropertyVal Name="LockRight">False</PropertyVal>
-  <PropertyVal Name="LockTop">False</PropertyVal>
-  <PropertyVal Name="Multiline">False</PropertyVal>
-  <PropertyVal Name="Name">Label3</PropertyVal>
-  <PropertyVal Name="Scope">0</PropertyVal>
-  <PropertyVal Name="Selectable">False</PropertyVal>
-  <PropertyVal Name="Super">DesktopLabel</PropertyVal>
-  <PropertyVal Name="TabIndex">2</PropertyVal>
-  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
-  <PropertyVal Name="TabStop">True</PropertyVal>
-  <PropertyVal Name="Text">Port</PropertyVal>
-  <PropertyVal Name="TextAlignment">0</PropertyVal>
-  <PropertyVal Name="TextColor">&amp;h000000</PropertyVal>
-  <PropertyVal Name="Tooltip"></PropertyVal>
-  <PropertyVal Name="Top">27</PropertyVal>
-  <PropertyVal Name="Transparent">False</PropertyVal>
-  <PropertyVal Name="Underline">False</PropertyVal>
-  <PropertyVal Name="Visible">True</PropertyVal>
-  <PropertyVal Name="Width">37</PropertyVal>
-  <ControlIndex>2</ControlIndex>
-  <Locked>1</Locked>
-  <PartID>677890047</PartID>
- </Control>
- <Control>
-  <ControlClass>DesktopTextField</ControlClass>
-  <ItemName>DesktopTextField</ItemName>
-  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
-  <PropertyVal Name="AllowFocusRing">True</PropertyVal>
-  <PropertyVal Name="AllowSpellChecking">False</PropertyVal>
-  <PropertyVal Name="AllowTabs">False</PropertyVal>
-  <PropertyVal Name="BackgroundColor">&amp;hFFFFFF</PropertyVal>
-  <PropertyVal Name="Bold">False</PropertyVal>
-  <PropertyVal Name="Enabled">True</PropertyVal>
-  <PropertyVal Name="FontName">System</PropertyVal>
-  <PropertyVal Name="FontSize">0.0</PropertyVal>
-  <PropertyVal Name="FontUnit">0</PropertyVal>
-  <PropertyVal Name="Format"></PropertyVal>
-  <PropertyVal Name="HasBorder">True</PropertyVal>
-  <PropertyVal Name="Height">27</PropertyVal>
-  <PropertyVal Name="Hint"></PropertyVal>
-  <PropertyVal Name="Index">-2147483648</PropertyVal>
-  <PropertyVal Name="Italic">False</PropertyVal>
-  <PropertyVal Name="Left">66</PropertyVal>
-  <PropertyVal Name="LockBottom">True</PropertyVal>
-  <PropertyVal Name="LockLeft">True</PropertyVal>
-  <PropertyVal Name="LockRight">False</PropertyVal>
-  <PropertyVal Name="LockTop">False</PropertyVal>
-  <PropertyVal Name="MaximumCharactersAllowed">0</PropertyVal>
-  <PropertyVal Name="Name">AETTextBox</PropertyVal>
-  <PropertyVal Name="Password">False</PropertyVal>
-  <PropertyVal Name="ReadOnly">False</PropertyVal>
-  <PropertyVal Name="Scope">0</PropertyVal>
-  <PropertyVal Name="Super">DesktopTextField</PropertyVal>
-  <PropertyVal Name="TabIndex">3</PropertyVal>
-  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
-  <PropertyVal Name="TabStop">True</PropertyVal>
-  <PropertyVal Name="Text"></PropertyVal>
-  <PropertyVal Name="TextAlignment">0</PropertyVal>
-  <PropertyVal Name="TextColor">&amp;h000000</PropertyVal>
-  <PropertyVal Name="Tooltip"></PropertyVal>
-  <PropertyVal Name="Top">20</PropertyVal>
-  <PropertyVal Name="Transparent">False</PropertyVal>
-  <PropertyVal Name="Underline">False</PropertyVal>
-  <PropertyVal Name="ValidationMask"></PropertyVal>
-  <PropertyVal Name="Visible">True</PropertyVal>
-  <PropertyVal Name="Width">80</PropertyVal>
-  <ControlIndex>3</ControlIndex>
-  <Locked>1</Locked>
-  <PartID>1827946495</PartID>
- </Control>
- <Control>
-  <ControlClass>DesktopTextField</ControlClass>
-  <ItemName>DesktopTextField</ItemName>
-  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
-  <PropertyVal Name="AllowFocusRing">True</PropertyVal>
-  <PropertyVal Name="AllowSpellChecking">False</PropertyVal>
-  <PropertyVal Name="AllowTabs">False</PropertyVal>
-  <PropertyVal Name="BackgroundColor">&amp;hFFFFFF</PropertyVal>
-  <PropertyVal Name="Bold">False</PropertyVal>
-  <PropertyVal Name="Enabled">True</PropertyVal>
-  <PropertyVal Name="FontName">System</PropertyVal>
-  <PropertyVal Name="FontSize">0.0</PropertyVal>
-  <PropertyVal Name="FontUnit">0</PropertyVal>
-  <PropertyVal Name="Format"></PropertyVal>
-  <PropertyVal Name="HasBorder">True</PropertyVal>
-  <PropertyVal Name="Height">27</PropertyVal>
-  <PropertyVal Name="Hint"></PropertyVal>
-  <PropertyVal Name="Index">-2147483648</PropertyVal>
-  <PropertyVal Name="Italic">False</PropertyVal>
-  <PropertyVal Name="Left">202</PropertyVal>
-  <PropertyVal Name="LockBottom">True</PropertyVal>
-  <PropertyVal Name="LockLeft">True</PropertyVal>
-  <PropertyVal Name="LockRight">False</PropertyVal>
-  <PropertyVal Name="LockTop">False</PropertyVal>
-  <PropertyVal Name="MaximumCharactersAllowed">0</PropertyVal>
-  <PropertyVal Name="Name">HostTextBox</PropertyVal>
-  <PropertyVal Name="Password">False</PropertyVal>
-  <PropertyVal Name="ReadOnly">False</PropertyVal>
-  <PropertyVal Name="Scope">0</PropertyVal>
-  <PropertyVal Name="Super">DesktopTextField</PropertyVal>
-  <PropertyVal Name="TabIndex">4</PropertyVal>
-  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
-  <PropertyVal Name="TabStop">True</PropertyVal>
-  <PropertyVal Name="Text"></PropertyVal>
-  <PropertyVal Name="TextAlignment">0</PropertyVal>
-  <PropertyVal Name="TextColor">&amp;h000000</PropertyVal>
-  <PropertyVal Name="Tooltip"></PropertyVal>
-  <PropertyVal Name="Top">20</PropertyVal>
-  <PropertyVal Name="Transparent">False</PropertyVal>
-  <PropertyVal Name="Underline">False</PropertyVal>
-  <PropertyVal Name="ValidationMask"></PropertyVal>
-  <PropertyVal Name="Visible">True</PropertyVal>
-  <PropertyVal Name="Width">80</PropertyVal>
-  <ControlIndex>4</ControlIndex>
-  <Locked>1</Locked>
-  <PartID>1573900287</PartID>
- </Control>
- <Control>
-  <ControlClass>DesktopTextField</ControlClass>
-  <ItemName>DesktopTextField</ItemName>
-  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
-  <PropertyVal Name="AllowFocusRing">True</PropertyVal>
-  <PropertyVal Name="AllowSpellChecking">False</PropertyVal>
-  <PropertyVal Name="AllowTabs">False</PropertyVal>
-  <PropertyVal Name="BackgroundColor">&amp;hFFFFFF</PropertyVal>
-  <PropertyVal Name="Bold">False</PropertyVal>
-  <PropertyVal Name="Enabled">True</PropertyVal>
-  <PropertyVal Name="FontName">System</PropertyVal>
-  <PropertyVal Name="FontSize">0.0</PropertyVal>
-  <PropertyVal Name="FontUnit">0</PropertyVal>
-  <PropertyVal Name="Format"></PropertyVal>
-  <PropertyVal Name="HasBorder">True</PropertyVal>
-  <PropertyVal Name="Height">27</PropertyVal>
-  <PropertyVal Name="Hint"></PropertyVal>
-  <PropertyVal Name="Index">-2147483648</PropertyVal>
-  <PropertyVal Name="InitialParent"></PropertyVal>
-  <PropertyVal Name="Italic">False</PropertyVal>
-  <PropertyVal Name="Left">324</PropertyVal>
-  <PropertyVal Name="LockBottom">True</PropertyVal>
-  <PropertyVal Name="LockLeft">True</PropertyVal>
-  <PropertyVal Name="LockRight">False</PropertyVal>
-  <PropertyVal Name="LockTop">False</PropertyVal>
-  <PropertyVal Name="MaximumCharactersAllowed">0</PropertyVal>
-  <PropertyVal Name="Name">PortTextBox</PropertyVal>
-  <PropertyVal Name="Password">False</PropertyVal>
-  <PropertyVal Name="ReadOnly">False</PropertyVal>
-  <PropertyVal Name="Scope">0</PropertyVal>
-  <PropertyVal Name="Super">DesktopTextField</PropertyVal>
-  <PropertyVal Name="TabIndex">5</PropertyVal>
-  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
-  <PropertyVal Name="TabStop">True</PropertyVal>
-  <PropertyVal Name="Text"></PropertyVal>
-  <PropertyVal Name="TextAlignment">0</PropertyVal>
-  <PropertyVal Name="TextColor">&amp;h000000</PropertyVal>
-  <PropertyVal Name="Tooltip"></PropertyVal>
-  <PropertyVal Name="Top">20</PropertyVal>
-  <PropertyVal Name="Transparent">False</PropertyVal>
-  <PropertyVal Name="Underline">False</PropertyVal>
-  <PropertyVal Name="ValidationMask"></PropertyVal>
-  <PropertyVal Name="Visible">True</PropertyVal>
-  <PropertyVal Name="Width">80</PropertyVal>
-  <ControlIndex>5</ControlIndex>
-  <Locked>1</Locked>
-  <PartID>1164845055</PartID>
- </Control>
- <Control>
-  <ControlClass>DesktopBevelButton</ControlClass>
-  <ItemName>DesktopBevelButton</ItemName>
-  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
-  <PropertyVal Name="AllowFocus">True</PropertyVal>
-  <PropertyVal Name="AllowTabStop">True</PropertyVal>
-  <PropertyVal Name="BackgroundColor">&amp;h00000000</PropertyVal>
-  <PropertyVal Name="BevelStyle">0</PropertyVal>
-  <PropertyVal Name="Bold">False</PropertyVal>
-  <PropertyVal Name="ButtonStyle">0</PropertyVal>
-  <PropertyVal Name="Caption"></PropertyVal>
-  <PropertyVal Name="CaptionAlignment">3</PropertyVal>
-  <PropertyVal Name="CaptionDelta">0</PropertyVal>
-  <PropertyVal Name="CaptionPosition">2</PropertyVal>
-  <PropertyVal Name="Enabled">True</PropertyVal>
-  <PropertyVal Name="FontName">System</PropertyVal>
-  <PropertyVal Name="FontSize">0.0</PropertyVal>
-  <PropertyVal Name="FontUnit">0</PropertyVal>
-  <PropertyVal Name="HasBackgroundColor">False</PropertyVal>
-  <PropertyVal Name="Height">32</PropertyVal>
-  <PropertyVal Name="Icon">563902463</PropertyVal>
-  <PropertyVal Name="IconAlignment">0</PropertyVal>
-  <PropertyVal Name="IconDeltaX">0</PropertyVal>
-  <PropertyVal Name="IconDeltaY">0</PropertyVal>
-  <PropertyVal Name="Index">-2147483648</PropertyVal>
-  <PropertyVal Name="InitialParent"></PropertyVal>
-  <PropertyVal Name="Italic">False</PropertyVal>
-  <PropertyVal Name="Left">438</PropertyVal>
-  <PropertyVal Name="LockBottom">False</PropertyVal>
-  <PropertyVal Name="LockLeft">True</PropertyVal>
-  <PropertyVal Name="LockRight">False</PropertyVal>
-  <PropertyVal Name="LockTop">True</PropertyVal>
-  <PropertyVal Name="MenuStyle">0</PropertyVal>
-  <PropertyVal Name="Name">EchoButton</PropertyVal>
-  <PropertyVal Name="Scope">0</PropertyVal>
-  <PropertyVal Name="Super">DesktopBevelButton</PropertyVal>
-  <PropertyVal Name="TabIndex">6</PropertyVal>
-  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
-  <PropertyVal Name="TextColor">&amp;h00000000</PropertyVal>
-  <PropertyVal Name="Tooltip"></PropertyVal>
-  <PropertyVal Name="Top">19</PropertyVal>
-  <PropertyVal Name="Transparent">False</PropertyVal>
-  <PropertyVal Name="Underline">False</PropertyVal>
-  <PropertyVal Name="Value">False</PropertyVal>
-  <PropertyVal Name="Visible">True</PropertyVal>
-  <PropertyVal Name="Width">32</PropertyVal>
-  <ControlIndex>6</ControlIndex>
-  <Locked>0</Locked>
-  <PartID>1319497727</PartID>
- </Control>
-</block>
-<block type="Module" ID="160108543">
- <ObjName>DcmtkFind</ObjName>
- <ObjContainerID>0</ObjContainerID>
- <IsClass>0</IsClass>
- <ItemFlags>1</ItemFlags>
- <IsInterface>0</IsInterface>
- <Compatibility></Compatibility>
- <Method>
-  <ItemName>BuildStudySeriesInstanceTree</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>424718335</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function BuildStudySeriesInstanceTree(peer As DicomPeer) As Dictionary</SourceLine>
-   <SourceLine>// Builds:</SourceLine>
-   <SourceLine>// studies(StudyInstanceUID) -&gt; Dictionary</SourceLine>
-   <SourceLine>//   "Series" -&gt; Dictionary(SeriesInstanceUID -&gt; Dictionary() instances)</SourceLine>
-   <SourceLine>//</SourceLine>
-   <SourceLine>// Each instance dictionary includes:</SourceLine>
-   <SourceLine>//   "SOPInstanceUID" -&gt; String</SourceLine>
-   <SourceLine>//   "NumberOfFrames" -&gt; Integer (0 if not present)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Var studiesOut As New Dictionary</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// 1) STUDY: get StudyInstanceUIDs</SourceLine>
-   <SourceLine>Var studyRows() As Dictionary = RunFind(peer, "STUDY", _</SourceLine>
-   <SourceLine>MatchKeysForLevel("STUDY", "", ""), _</SourceLine>
-   <SourceLine>ReturnKeys("STUDY"))</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>For Each row As Dictionary In studyRows</SourceLine>
-   <SourceLine>Var studyUID As String = row.Lookup("StudyInstanceUID", "").StringValue.Trim</SourceLine>
-   <SourceLine>If studyUID = "" Then Continue</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// 2) SERIES: for each study, get SeriesInstanceUIDs</SourceLine>
-   <SourceLine>Var seriesRows() As Dictionary = RunFind(peer, "SERIES", _</SourceLine>
-   <SourceLine>MatchKeysForLevel("SERIES", studyUID, ""), _</SourceLine>
-   <SourceLine>ReturnKeys("SERIES"))</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Var seriesMap As New Dictionary</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>For Each srow As Dictionary In seriesRows</SourceLine>
-   <SourceLine>Var seriesUID As String = srow.Lookup("SeriesInstanceUID", "").StringValue.Trim</SourceLine>
-   <SourceLine>If seriesUID = "" Then Continue</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// 3) IMAGE: for each series, get SOPInstanceUID + NumberOfFrames</SourceLine>
-   <SourceLine>Var imageRows() As Dictionary = RunFind(peer, "IMAGE", _</SourceLine>
-   <SourceLine>MatchKeysForLevel("IMAGE", studyUID, seriesUID), _</SourceLine>
-   <SourceLine>ReturnKeys("IMAGE"))</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// Normalize NumberOfFrames</SourceLine>
-   <SourceLine>For Each irow As Dictionary In imageRows</SourceLine>
-   <SourceLine>irow.Value("NumberOfFrames") = ParseIntSafe(irow.Lookup("NumberOfFrames", "0"))</SourceLine>
-   <SourceLine>Next</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>seriesMap.Value(seriesUID) = imageRows</SourceLine>
-   <SourceLine>Next</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Var studyRec As New Dictionary</SourceLine>
-   <SourceLine>studyRec.Value("Series") = seriesMap</SourceLine>
-   <SourceLine>studiesOut.Value(studyUID) = studyRec</SourceLine>
-   <SourceLine>Next</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return studiesOut</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>peer As DicomPeer</ItemParams>
-  <ItemResult>Dictionary</ItemResult>
- </Method>
- <Method>
-  <ItemName>TreeToJson</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>183539711</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function TreeToJson(tree As Dictionary) As String</SourceLine>
-   <SourceLine>Var j As New JSONItem</SourceLine>
-   <SourceLine>j.Value("Studies") = DictionaryToJSONItem(tree)</SourceLine>
-   <SourceLine>Return j.ToString</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>tree As Dictionary</ItemParams>
-  <ItemResult>String</ItemResult>
- </Method>
- <Method>
-  <ItemName>RunFind</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1940172799</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function RunFind(peer As DicomPeer, level As String, matchKeys As Dictionary, returnKeys As Dictionary) As Dictionary()</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Var args() As String</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// Study Root Information Model</SourceLine>
-   <SourceLine>args.Add("-S")</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>args.Add("--call")</SourceLine>
-   <SourceLine>args.Add(peer.CalledAET)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>args.Add("--aetitle")</SourceLine>
-   <SourceLine>args.Add(peer.CallingAET)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// Keep output mostly to datasets (still contains some status lines)</SourceLine>
-   <SourceLine>args.Add("--quiet")</SourceLine>
-   <SourceLine>args.Add("--show-responses")</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// Always include Q/R level</SourceLine>
-   <SourceLine>args.Add("--key")</SourceLine>
-   <SourceLine>args.Add("QueryRetrieveLevel=" + level)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// Matching keys (with values)</SourceLine>
-   <SourceLine>For Each k As Variant In matchKeys.Keys</SourceLine>
-   <SourceLine>args.Add("--key")</SourceLine>
-   <SourceLine>args.Add(k.StringValue + "=" + matchKeys.Value(k).StringValue)</SourceLine>
-   <SourceLine>Next</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// Return keys (blank value requests SCP to fill)</SourceLine>
-   <SourceLine>For Each k As Variant In returnKeys.Keys</SourceLine>
-   <SourceLine>args.Add("--key")</SourceLine>
-   <SourceLine>args.Add(k.StringValue + "=")</SourceLine>
-   <SourceLine>Next</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// Peer host/port</SourceLine>
-   <SourceLine>args.Add(peer.Host)</SourceLine>
-   <SourceLine>args.Add(peer.Port.ToString)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Var sh As New Shell</SourceLine>
-   <SourceLine>sh.Execute(FindscuPath + " " + JoinQuoted(args))</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return ParseFindscuText(sh.Result)</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>peer As DicomPeer, level As String, matchKeys As Dictionary, returnKeys As Dictionary</ItemParams>
-  <ItemResult>Dictionary()</ItemResult>
- </Method>
- <Method>
-  <ItemName>MatchKeysForLevel</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1334491135</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function MatchKeysForLevel(level As String, studyUID As String, seriesUID As String) As Dictionary</SourceLine>
-   <SourceLine>Var d As New Dictionary</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Select Case level.Uppercase</SourceLine>
-   <SourceLine>Case "STUDY"</SourceLine>
-   <SourceLine>// none</SourceLine>
-   <SourceLine>Case "SERIES"</SourceLine>
-   <SourceLine>d.Value("StudyInstanceUID") = studyUID</SourceLine>
-   <SourceLine>Case "IMAGE"</SourceLine>
-   <SourceLine>d.Value("StudyInstanceUID") = studyUID</SourceLine>
-   <SourceLine>d.Value("SeriesInstanceUID") = seriesUID</SourceLine>
-   <SourceLine>End Select</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return d</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>level As String, studyUID As String, seriesUID As String</ItemParams>
-  <ItemResult>Dictionary</ItemResult>
- </Method>
- <Method>
-  <ItemName>ReturnKeys</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>620158975</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function ReturnKeys(level As String) As Dictionary</SourceLine>
-   <SourceLine>Var d As New Dictionary</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Select Case level.Uppercase</SourceLine>
-   <SourceLine>Case "STUDY"</SourceLine>
-   <SourceLine>d.Value("StudyInstanceUID") = ""</SourceLine>
-   <SourceLine>Case "SERIES"</SourceLine>
-   <SourceLine>d.Value("SeriesInstanceUID") = ""</SourceLine>
-   <SourceLine>Case "IMAGE"</SourceLine>
-   <SourceLine>d.Value("SOPInstanceUID") = ""</SourceLine>
-   <SourceLine>d.Value("NumberOfFrames") = ""</SourceLine>
-   <SourceLine>End Select</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return d</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>level As String</ItemParams>
-  <ItemResult>Dictionary</ItemResult>
- </Method>
- <Method>
-  <ItemName>ParseFindscuText</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>924504063</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function ParseFindscuText(output As String) As Dictionary()</SourceLine>
-   <SourceLine>Var rows() As Dictionary</SourceLine>
-   <SourceLine>Var current As Dictionary</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>output = output.ReplaceLineEndings(EndOfLine)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>For Each rawLine As String In output.Split(EndOfLine)</SourceLine>
-   <SourceLine>Var line As String = rawLine.Trim</SourceLine>
-   <SourceLine>If line = "" Then Continue</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// Heuristics: DCMTK often prints separators or status lines between datasets.</SourceLine>
-   <SourceLine>If IsDatasetBoundary(line) Then</SourceLine>
-   <SourceLine>If current &lt;&gt; Nil And current.Count &gt; 0 Then</SourceLine>
-   <SourceLine>rows.Add(current)</SourceLine>
-   <SourceLine>End If</SourceLine>
-   <SourceLine>current = Nil</SourceLine>
-   <SourceLine>Continue</SourceLine>
-   <SourceLine>End If</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// Element line pattern: starts with "(" and contains [...] and ends with a keyword</SourceLine>
-   <SourceLine>If line.Left(1) = "(" And line.IndexOf("[") &gt;= 0 And line.IndexOf("]") &gt; line.IndexOf("[") Then</SourceLine>
-   <SourceLine>If current Is Nil Then current = New Dictionary</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Var valueText As String = Between(line, "[", "]").Trim</SourceLine>
-   <SourceLine>Var nameText As String = FieldNameFromLine(line)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>If nameText &lt;&gt; "" Then</SourceLine>
-   <SourceLine>current.Value(nameText) = valueText</SourceLine>
-   <SourceLine>End If</SourceLine>
-   <SourceLine>End If</SourceLine>
-   <SourceLine>Next</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>If current &lt;&gt; Nil And current.Count &gt; 0 Then</SourceLine>
-   <SourceLine>rows.Add(current)</SourceLine>
-   <SourceLine>End If</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return rows</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>output As String</ItemParams>
-  <ItemResult>Dictionary()</ItemResult>
- </Method>
- <Method>
-  <ItemName>IsDatasetBoundary</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>2005450751</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function IsDatasetBoundary(line As String) As Boolean</SourceLine>
-   <SourceLine>// common-ish markers across DCMTK builds/log levels</SourceLine>
-   <SourceLine>If line.IndexOf("I: ----------------") &gt;= 0 Then Return True</SourceLine>
-   <SourceLine>If line.IndexOf("--------") &gt;= 0 Then Return True</SourceLine>
-   <SourceLine>If line.IndexOf("Find Response") &gt;= 0 Then Return True</SourceLine>
-   <SourceLine>If line.IndexOf("status=Pending") &gt;= 0 Then Return True</SourceLine>
-   <SourceLine>// When DCMTK prints "I: Received C-FIND RSP" etc., treat as boundary.</SourceLine>
-   <SourceLine>If line.IndexOf("C-FIND") &gt;= 0 And line.IndexOf("RSP") &gt;= 0 Then Return True</SourceLine>
-   <SourceLine>Return False</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>line As String</ItemParams>
-  <ItemResult>Boolean</ItemResult>
- </Method>
- <Method>
-  <ItemName>Between</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>411740159</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function Between(s As String, leftDelim As String, rightDelim As String) As String</SourceLine>
-   <SourceLine>Var a As Integer = s.IndexOf(leftDelim)</SourceLine>
-   <SourceLine>If a &lt; 0 Then Return ""</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>a = a + leftDelim.Length</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Var b As Integer = s.IndexOf(a, rightDelim)</SourceLine>
-   <SourceLine>If b &lt; 0 Then Return ""</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return s.Middle(a, b - a)</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>s As String, leftDelim As String, rightDelim As String</ItemParams>
-  <ItemResult>String</ItemResult>
- </Method>
- <Method>
-  <ItemName>FieldNameFromLine</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1621540863</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function FieldNameFromLine(line As String) As String</SourceLine>
-   <SourceLine>// Usually the dictionary name is the last token.</SourceLine>
-   <SourceLine>Var parts() As String = line.Split(" ")</SourceLine>
-   <SourceLine>If parts.Count = 0 Then Return ""</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Var tail As String = parts(parts.LastIndex).Trim</SourceLine>
-   <SourceLine>If tail = "" Then Return ""</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>// Filter out tokens that are not likely to be names</SourceLine>
-   <SourceLine>// (e.g., "#", numbers)</SourceLine>
-   <SourceLine>Var c As String = tail.Left(1)</SourceLine>
-   <SourceLine>If Not ((c &gt;= "A" And c &lt;= "Z") Or (c &gt;= "a" And c &lt;= "z")) Then</SourceLine>
-   <SourceLine>Return ""</SourceLine>
-   <SourceLine>End If</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Return tail</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>line As String</ItemParams>
-  <ItemResult>String</ItemResult>
- </Method>
- <Method>
-  <ItemName>DictionaryToJSONItem</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1092110335</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function DictionaryToJSONItem(d As Dictionary) As JSONItem</SourceLine>
-   <SourceLine>Var j As New JSONItem</SourceLine>
-   <SourceLine>For Each k As Variant In d.Keys</SourceLine>
-   <SourceLine>Var key As String = k.StringValue</SourceLine>
-   <SourceLine>Var v As Variant = d.Value(k)</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>If v IsA Dictionary Then</SourceLine>
-   <SourceLine>j.Value(key) = DictionaryToJSONItem(Dictionary(v))</SourceLine>
-   <SourceLine>ElseIf v IsA JSONItem Then</SourceLine>
-   <SourceLine>j.Value(key) = JSONItem(v)</SourceLine>
-   <SourceLine>Else</SourceLine>
-   <SourceLine>// arrays of Dictionary come in as Variant(), handle that in caller if needed</SourceLine>
-   <SourceLine>j.Value(key) = v</SourceLine>
-   <SourceLine>End If</SourceLine>
-   <SourceLine>Next</SourceLine>
-   <SourceLine>Return j</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>d As Dictionary</ItemParams>
-  <ItemResult>JSONItem</ItemResult>
- </Method>
- <Method>
-  <ItemName>ParseIntSafe</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1555118079</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function ParseIntSafe(v As Variant) As Integer</SourceLine>
-   <SourceLine>Try</SourceLine>
-   <SourceLine>Return Integer.FromString(v.StringValue.Trim)</SourceLine>
-   <SourceLine>Catch</SourceLine>
-   <SourceLine>Return 0</SourceLine>
-   <SourceLine>End Try</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>v As Variant</ItemParams>
-  <ItemResult>Integer</ItemResult>
- </Method>
- <Method>
-  <ItemName>FindscuPath</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1009870847</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function FindscuPath() As String</SourceLine>
-   <SourceLine>#If TargetWindows Then</SourceLine>
-   <SourceLine>Return "findscu.exe"</SourceLine>
-   <SourceLine>#Else</SourceLine>
-   <SourceLine>Return "findscu"</SourceLine>
-   <SourceLine>#EndIf</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult>String</ItemResult>
- </Method>
- <Method>
-  <ItemName>QuoteArg</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>658386943</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function QuoteArg(s As String) As String</SourceLine>
-   <SourceLine>// Basic shell quoting</SourceLine>
-   <SourceLine>If s.IndexOf(" ") &gt;= 0 Or s.IndexOf("""") &gt;= 0 Then</SourceLine>
-   <SourceLine>s = s.ReplaceAll("""", "\""")</SourceLine>
-   <SourceLine>Return """" + s + """"</SourceLine>
-   <SourceLine>End If</SourceLine>
-   <SourceLine>Return s</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>s As String</ItemParams>
-  <ItemResult>String</ItemResult>
- </Method>
- <Method>
-  <ItemName>JoinQuoted</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>106637311</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function JoinQuoted(args() As String) As String</SourceLine>
-   <SourceLine>Var parts() As String</SourceLine>
-   <SourceLine>For Each a As String In args</SourceLine>
-   <SourceLine>parts.Add(QuoteArg(a))</SourceLine>
-   <SourceLine>Next</SourceLine>
-   <SourceLine>Return String.FromArray(parts, " ")</SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>args() As String</ItemParams>
-  <ItemResult>String</ItemResult>
- </Method>
- <ViewBehavior>
-  <ViewProperty>
-   <ObjName>Name</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Index</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <PropertyValue>-2147483648</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Super</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Left</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Top</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
- </ViewBehavior>
-</block>
-<block type="Module" ID="1667463167">
- <ObjName>DicomPeer</ObjName>
- <ObjContainerID>160108543</ObjContainerID>
- <IsClass>1</IsClass>
- <ItemFlags>1</ItemFlags>
- <IsInterface>0</IsInterface>
- <Compatibility></Compatibility>
- <Property>
-  <ItemName>CalledAET</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>976914431</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>CalledAET As String</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>CalledAET As String</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
- </Property>
- <Property>
-  <ItemName>Host</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>145195007</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Host As String</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>Host As String</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
- </Property>
- <Property>
-  <ItemName>Port</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1118728191</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Port As Integer</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>Port As Integer</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
- </Property>
- <Property>
-  <ItemName>CallingAET</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1591832575</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>CallingAET As String</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>CallingAET As String</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
- </Property>
- <ViewBehavior>
-  <ViewProperty>
-   <ObjName>Name</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Index</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <PropertyValue>-2147483648</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Super</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Left</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Top</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>CalledAET</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>String</ItemType>
-   <EditorType>MultiLineEditor</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Host</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>String</ItemType>
-   <EditorType>MultiLineEditor</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Port</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>CallingAET</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>String</ItemType>
-   <EditorType>MultiLineEditor</EditorType>
-  </ViewProperty>
- </ViewBehavior>
-</block>
 <block type="Module" ID="28317695">
  <ObjName>AQuery</ObjName>
  <ObjContainerID>1707980799</ObjContainerID>
  <IsClass>1</IsClass>
- <Superclass>dcmtk.AShell</Superclass>
+ <Superclass>AShell</Superclass>
  <ItemFlags>1</ItemFlags>
  <IsInterface>0</IsInterface>
  <Compatibility></Compatibility>
@@ -3797,9 +2617,8 @@
    <SourceLine>Var exe As FolderItem = App.ExecutableFile</SourceLine>
    <SourceLine>Var res As FolderItem = exe.Parent.Child(exe.Name + " Resources")</SourceLine>
    <SourceLine>Var dcmtkDir As FolderItem = res.Child("dcmtk")</SourceLine>
-   <SourceLine>dcmtkpath = dcmtkDir.NativePath</SourceLine>
    <SourceLine>dcmtkpath = dcmtkDir.ShellPath</SourceLine>
-   <SourceLine>System.DebugLog("")</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>End Sub</SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
@@ -3873,6 +2692,444 @@
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
   <ItemParams>r as dicom.EnumROOTS=dicom.enumROOTS.STUDY, l as dicom.enumLEVELS=dicom.enumLEVELS.STUDY, queree as dictionary, gets as Dictionary, res as dicom.ANode</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Property>
+  <ItemName>dcmtkpath</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1164077055</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>dcmtkpath As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>dcmtkpath As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>Host</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>2114861055</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Host As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Host As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>mHost = value</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>return mHost</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mHost</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1423292415</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mHost As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mHost As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mLevel</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1087563775</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mLevel As dicom.enumLEVELS</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mLevel As dicom.enumLEVELS</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mMyAET</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>543815679</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mMyAET As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mMyAET As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mPort</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1805701119</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mPort As Integer = 104</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mPort As Integer = 104</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mQueryAET</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1860227071</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mQueryAET As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mQueryAET As String</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mRoot</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1070385151</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mRoot As dicom.enumROOTS</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mRoot As dicom.enumROOTS</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mRootNode</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>368644095</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mRootNode As dicom.ANode</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mRootNode As dicom.ANode</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>MyAET</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>118474751</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>MyAET As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>MyAET As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>mMyAET = value</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>return mMyAET</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Port</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1418493951</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Port As Integer</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Port As Integer</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>mPort = value</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>return mPort</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>QueryAET</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>440559615</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>QueryAET As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>QueryAET As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>mQueryAET = value</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>return mQueryAET</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>ExecuteMode</ObjName>
+   <Visible>1</Visible>
+   <ItemType>ExecuteModes</ItemType>
+   <EditorType>Enum</EditorType>
+   <Enumeration>
+    <ItemDef>0 - Synchronous</ItemDef>
+    <ItemDef>1 - Asynchronous</ItemDef>
+    <ItemDef>2 - Interactive</ItemDef>
+   </Enumeration>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>ExitCode</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Result</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>PID</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>IsRunning</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>TimeOut</ObjName>
+   <Visible>1</Visible>
+   <ItemType>Integer</ItemType>
+   <EditorType>Integer</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Arguments</ObjName>
+   <Visible>1</Visible>
+   <ItemType>String</ItemType>
+   <EditorType>String</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Backend</ObjName>
+   <Visible>1</Visible>
+   <ItemType>String</ItemType>
+   <EditorType>String</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Canonical</ObjName>
+   <Visible>1</Visible>
+   <ItemType>Boolean</ItemType>
+   <EditorType>Boolean</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>cmd</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>IsFInished</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>False</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Host</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>MyAET</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Port</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>QueryAET</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>mRoot</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>dicom.enumROOTS</ItemType>
+   <EditorType>Enum</EditorType>
+   <Enumeration>
+    <ItemDef>0 - PATIENT</ItemDef>
+    <ItemDef>1 - STUDY</ItemDef>
+    <ItemDef>2 - ANY</ItemDef>
+    <ItemDef>3 - PATIENTSTUDY</ItemDef>
+    <ItemDef>4 - WORKLIST</ItemDef>
+   </Enumeration>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>mLevel</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>dicom.enumLEVELS</ItemType>
+   <EditorType>Enum</EditorType>
+   <Enumeration>
+    <ItemDef>0 - PATIENT</ItemDef>
+    <ItemDef>1 - STUDY</ItemDef>
+    <ItemDef>2 - SERIES</ItemDef>
+    <ItemDef>3 - IMAGE</ItemDef>
+   </Enumeration>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>dcmtkpath</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+ </ViewBehavior>
+</block>
+<block type="Module" ID="1926866943">
+ <ObjName>AEcho</ObjName>
+ <ObjContainerID>1707980799</ObjContainerID>
+ <IsClass>1</IsClass>
+ <Superclass>AShell</Superclass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <Method>
+  <ItemName>constructor</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>2097582079</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub constructor()</SourceLine>
+   <SourceLine>Var exe As FolderItem = App.ExecutableFile</SourceLine>
+   <SourceLine>Var res As FolderItem = exe.Parent.Child(exe.Name + " Resources")</SourceLine>
+   <SourceLine>Var dcmtkDir As FolderItem = res.Child("dcmtk")</SourceLine>
+   <SourceLine>dcmtkpath = dcmtkDir.ShellPath</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>Echo</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>351111167</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Echo(AET As String, AEC As String, Host As String, Port As String)</SourceLine>
+   <SourceLine>cmd = dcmtkpath + "echoscu"</SourceLine>
+   <SourceLine>cmd = cmd + " -d -aet " + AET + " -aec " + AEC + " " + Host + " " + Port</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>var sh as new Shell</SourceLine>
+   <SourceLine>sh.ExecuteMode = Shell.ExecuteModes.Synchronous</SourceLine>
+   <SourceLine>sh.Execute(cmd)</SourceLine>
+   <SourceLine>MessageBox(cmd + EndOfLine + sh.Result)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>AET As String, AEC As String, Host As String, Port As String</ItemParams>
   <ItemResult></ItemResult>
  </Method>
  <Property>
@@ -5989,456 +5246,6 @@
   </ViewProperty>
  </ViewBehavior>
 </block>
-<block type="Module" ID="1313435647">
- <ObjName>ANode</ObjName>
- <ObjContainerID>1094053887</ObjContainerID>
- <IsClass>1</IsClass>
- <ItemFlags>1</ItemFlags>
- <IsInterface>0</IsInterface>
- <Compatibility></Compatibility>
- <Method>
-  <ItemName>AsDictionary</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>2123044863</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function AsDictionary() As Dictionary</SourceLine>
-   <SourceLine>dim d as new Dictionary</SourceLine>
-   <SourceLine>dim v as Variant</SourceLine>
-   <SourceLine>dim dobc as DicomObjectBaseClass</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Dim myProperties() as Introspection.PropertyInfo = Introspection.GetType(self).GetProperties</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>For i as Integer=0 to Ubound(myProperties)</SourceLine>
-   <SourceLine>v = myProperties(i).Value(self) //get the value</SourceLine>
-   <SourceLine>if v IsA DicomObjectBaseClass then   //test for type</SourceLine>
-   <SourceLine>dobc = DicomObjectBaseClass(v)</SourceLine>
-   <SourceLine>d.Value(dobc.GroupElement) = dobc.Value</SourceLine>
-   <SourceLine>end </SourceLine>
-   <SourceLine>next</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>return d</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult>Dictionary</ItemResult>
- </Method>
- <Method>
-  <ItemName>AsRow</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>162824191</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function AsRow() As String()</SourceLine>
-   <SourceLine>dim rh(-1) as String</SourceLine>
-   <SourceLine>dim v as Variant</SourceLine>
-   <SourceLine>dim dobc as DicomObjectBaseClass</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Dim myProperties() as Introspection.PropertyInfo = Introspection.GetType(self).GetProperties</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>For i as Integer=0 to Ubound(myProperties)</SourceLine>
-   <SourceLine>v = myProperties(i).Value(self) //get the value</SourceLine>
-   <SourceLine>if v IsA DicomObjectBaseClass then   //test for type</SourceLine>
-   <SourceLine>dobc = DicomObjectBaseClass(v)</SourceLine>
-   <SourceLine>if dobc.ShownOnUI then</SourceLine>
-   <SourceLine>rh.Append(dobc.Value)</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>end </SourceLine>
-   <SourceLine>next</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>return rh</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult>String()</ItemResult>
- </Method>
- <Method>
-  <ItemName>AsRowHeader</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1648193535</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Function AsRowHeader() As String()</SourceLine>
-   <SourceLine>dim rh(-1) as String</SourceLine>
-   <SourceLine>dim v as Variant</SourceLine>
-   <SourceLine>dim dobc as DicomObjectBaseClass</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>Dim myProperties() as Introspection.PropertyInfo = Introspection.GetType(self).GetProperties</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>For i as Integer=0 to Ubound(myProperties)</SourceLine>
-   <SourceLine>v = myProperties(i).Value(self) //get the value</SourceLine>
-   <SourceLine>if v IsA DicomObjectBaseClass then   //test for type</SourceLine>
-   <SourceLine>dobc = DicomObjectBaseClass(v)</SourceLine>
-   <SourceLine>if dobc.ShownOnUI then</SourceLine>
-   <SourceLine>rh.Append(dobc.DisplayName)</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>end </SourceLine>
-   <SourceLine>next</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>return rh</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>End Function</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams></ItemParams>
-  <ItemResult>String()</ItemResult>
- </Method>
- <Method>
-  <ItemName>FromDictionary</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>2060439551</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub FromDictionary(d as Dictionary)</SourceLine>
-   <SourceLine>dim v as Variant</SourceLine>
-   <SourceLine>dim dobc as DicomObjectBaseClass</SourceLine>
-   <SourceLine>dim key as string</SourceLine>
-   <SourceLine>Dim myProperties() as Introspection.PropertyInfo = Introspection.GetType(self).GetProperties</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>for each key in d.Keys</SourceLine>
-   <SourceLine>For i as Integer=0 to Ubound(myProperties)</SourceLine>
-   <SourceLine>v = myProperties(i).Value(self) //get the value</SourceLine>
-   <SourceLine>if v IsA DicomObjectBaseClass then   //test for type</SourceLine>
-   <SourceLine>dobc = DicomObjectBaseClass(v)</SourceLine>
-   <SourceLine>if key = dobc.GroupElement then</SourceLine>
-   <SourceLine>dobc.Value = d.Value(key)</SourceLine>
-   <SourceLine>myProperties.Remove(i)</SourceLine>
-   <SourceLine>exit for</SourceLine>
-   <SourceLine>end</SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>next</SourceLine>
-   <SourceLine>next</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>End Sub</SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <AliasName></AliasName>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <ItemParams>d as Dictionary</ItemParams>
-  <ItemResult></ItemResult>
- </Method>
- <Property>
-  <ItemName>Children(-1)</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1323360255</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Children(-1) As dicom.ANode</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>Children(-1) As dicom.ANode</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
- </Property>
- <Property>
-  <ItemName>IsSelected</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>991510527</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>IsSelected As Boolean = false</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>IsSelected As Boolean = false</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
- </Property>
- <ViewBehavior>
-  <ViewProperty>
-   <ObjName>Name</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Index</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <PropertyValue>-2147483648</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Super</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Left</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Top</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>IsSelected</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <PropertyValue>false</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
- </ViewBehavior>
-</block>
-<block type="Module" ID="1094053887">
- <ObjName>dicom</ObjName>
- <ObjContainerID>0</ObjContainerID>
- <IsClass>0</IsClass>
- <ItemFlags>1</ItemFlags>
- <IsInterface>0</IsInterface>
- <Compatibility></Compatibility>
- <Note>
-  <ItemName>PN VR</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1655826431</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <NoteLine>PN VR</NoteLine>
-   <NoteLine></NoteLine>
-   <NoteLine>1) family name</NoteLine>
-   <NoteLine>2) given name</NoteLine>
-   <NoteLine>3) middle name</NoteLine>
-   <NoteLine>4) name prefix</NoteLine>
-   <NoteLine>5) same suffix</NoteLine>
-   <NoteLine></NoteLine>
-   <NoteLine>O'Brien^Brian^John^Dr^Phd</NoteLine>
-   <NoteLine></NoteLine>
-   <NoteLine></NoteLine>
-  </ItemSource>
-  <ItemFlags>0</ItemFlags>
- </Note>
- <Property>
-  <ItemName>dicomKeys</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>2041055231</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>dicomKeys As Dictionary</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>dicomKeys As Dictionary</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <SetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Set</SourceLine>
-   <SourceLine>mDictionary = value</SourceLine>
-   <SourceLine>End Set</SourceLine>
-  </SetAccessor>
-  <GetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Get</SourceLine>
-   <SourceLine>if mDictionary = nil then</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>mDictionary = new Dictionary</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>mDictionary.Value("0008,0005") = "SpecificCharacterSet"</SourceLine>
-   <SourceLine>mDictionary.Value("0008,0020") = "Study Date"</SourceLine>
-   <SourceLine>mDictionary.Value("0008,0021") = "Series Date"</SourceLine>
-   <SourceLine>mDictionary.Value("0008,0030") = "Study Time"</SourceLine>
-   <SourceLine>mDictionary.Value("0008,0031") = "Series Time"</SourceLine>
-   <SourceLine>mDictionary.Value("0008,0050") = "Accession Number"</SourceLine>
-   <SourceLine>mDictionary.Value("0008,0052") ="QueryRetrieveLevel"</SourceLine>
-   <SourceLine>mDictionary.Value("0008,0054") ="Retrieve AE Title"</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>mDictionary.Value("0008,0060") = "Modality"</SourceLine>
-   <SourceLine>mDictionary.Value("0008,1030") = "Study Description"</SourceLine>
-   <SourceLine>mDictionary.Value("0008,103E") = "Series Description"</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>mDictionary.Value("0010,0010") = "Patient Name"</SourceLine>
-   <SourceLine>mDictionary.Value("0010,0020") = "Patient ID"</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>mDictionary.Value("0020,000D") = "Study Instance UID"</SourceLine>
-   <SourceLine>mDictionary.Value("0020,000E") = "Series Instance UID"</SourceLine>
-   <SourceLine>mDictionary.Value("0020,0010") = "Study ID"</SourceLine>
-   <SourceLine>mDictionary.Value("0020,0011") = "Series Number"</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine>return mDictionary</SourceLine>
-   <SourceLine>End Get</SourceLine>
-  </GetAccessor>
- </Property>
- <Property>
-  <ItemName>FormDictionary</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1995120639</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>FormDictionary As Dictionary</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>FormDictionary As Dictionary</ItemDeclaration>
-  <ItemFlags>0</ItemFlags>
-  <IsShared>0</IsShared>
-  <SetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Set</SourceLine>
-   <SourceLine>mFormDictionary = value</SourceLine>
-   <SourceLine>End Set</SourceLine>
-  </SetAccessor>
-  <GetAccessor>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Get</SourceLine>
-   <SourceLine>if mFormDictionary = nil then</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>mFormDictionary = new Dictionary</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>mFormDictionary.Value("0008,0020") = "Study Date"</SourceLine>
-   <SourceLine>mFormDictionary.Value("0008,0021") = "Series Date"</SourceLine>
-   <SourceLine>mFormDictionary.Value("0008,0030") = "Study Time"</SourceLine>
-   <SourceLine>mFormDictionary.Value("0008,0031") = "Series Time"</SourceLine>
-   <SourceLine>mFormDictionary.Value("0008,0050") = "Accession Number"</SourceLine>
-   <SourceLine>mFormDictionary.Value("0008,0054") ="Retrieve AE Title"</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>mFormDictionary.Value("0008,0060") = "Modality"</SourceLine>
-   <SourceLine>mFormDictionary.Value("0008,1030") = "Study Description"</SourceLine>
-   <SourceLine>mFormDictionary.Value("0008,103E") = "Series Description"</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>mFormDictionary.Value("0010,0010") = "Patient Name"</SourceLine>
-   <SourceLine>mFormDictionary.Value("0010,0020") = "Patient ID"</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>mFormDictionary.Value("0020,0010") = "Study ID"</SourceLine>
-   <SourceLine>mFormDictionary.Value("0020,0011") = "Series Number"</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>end if</SourceLine>
-   <SourceLine></SourceLine>
-   <SourceLine>return mFormDictionary</SourceLine>
-   <SourceLine>End Get</SourceLine>
-  </GetAccessor>
- </Property>
- <Property>
-  <ItemName>mDictionary</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1160495103</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mDictionary As Dictionary</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mDictionary As Dictionary</ItemDeclaration>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
- </Property>
- <Property>
-  <ItemName>mFormDictionary</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1068212223</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mFormDictionary As Dictionary</SourceLine>
-   <SourceLine></SourceLine>
-  </ItemSource>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mFormDictionary As Dictionary</ItemDeclaration>
-  <ItemFlags>33</ItemFlags>
-  <IsShared>0</IsShared>
- </Property>
- <ViewBehavior>
-  <ViewProperty>
-   <ObjName>Name</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Index</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <PropertyValue>-2147483648</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Super</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>ID</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Left</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Top</ObjName>
-   <Visible>1</Visible>
-   <PropertyGroup>Position</PropertyGroup>
-   <PropertyValue>0</PropertyValue>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
- </ViewBehavior>
- <Enumeration>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>0</ItemFlags>
-  <ItemType>Integer</ItemType>
-  <BinaryEnum>0</BinaryEnum>
-  <ItemName>enumLEVELS</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1266649087</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>PATIENT</SourceLine>
-   <SourceLine>STUDY</SourceLine>
-   <SourceLine>SERIES</SourceLine>
-   <SourceLine>IMAGE</SourceLine>
-  </ItemSource>
- </Enumeration>
- <Enumeration>
-  <TextEncoding>134217984</TextEncoding>
-  <ItemFlags>0</ItemFlags>
-  <ItemType>Integer</ItemType>
-  <BinaryEnum>0</BinaryEnum>
-  <ItemName>enumROOTS</ItemName>
-  <Compatibility></Compatibility>
-  <Visible>1</Visible>
-  <PartID>1241423871</PartID>
-  <ItemSource>
-   <TextEncoding>134217984</TextEncoding>
-   <SourceLine>PATIENT</SourceLine>
-   <SourceLine>STUDY</SourceLine>
-   <SourceLine>ANY</SourceLine>
-   <SourceLine>PATIENTSTUDY</SourceLine>
-   <SourceLine>WORKLIST</SourceLine>
-  </ItemSource>
- </Enumeration>
-</block>
 <block type="Module" ID="140763184">
  <ObjName>Extensions</ObjName>
  <ObjContainerID>0</ObjContainerID>
@@ -6797,112 +5604,6 @@
   </ViewProperty>
  </ViewBehavior>
 </block>
-<block type="MultiImage" ID="563902463">
- <ObjName>pacs_echo</ObjName>
- <ObjContainerID>0</ObjContainerID>
- <ItemName>pacs_echo</ItemName>
- <ImageRepresentation>
-  <SaveInfo><Hex bytes="92">00F1D173010201000000003C2F686F6D652F627269616E2F6465762F4449434F4D2D436F6D6D616E6465722F45787465726E616C2F69636F6E732F706163735F6563686F2E706E670300000000010104000000000100000000000000</Hex></SaveInfo>
-  <FullPath>/home/brian/dev/DICOM-Commander/External/icons/pacs_echo.png</FullPath>
-  <PartialPath>External\icons\pacs_echo.png</PartialPath>
-  <ImageSpecification>
-   <Comment></Comment>
-   <Device>31</Device>
-   <Height>32</Height>
-   <Orientation>0</Orientation>
-   <Platform>15</Platform>
-   <Resolution>72</Resolution>
-   <Width>32</Width>
-   <HeightDouble>32</HeightDouble>
-   <WidthDouble>32</WidthDouble>
-  </ImageSpecification>
- </ImageRepresentation>
- <ImageRepresentation>
-  <SaveInfo><Hex bytes="95">00F1D173010201000000003F2F686F6D652F627269616E2F6465762F4449434F4D2D436F6D6D616E6465722F45787465726E616C2F69636F6E732F706163735F6563686F4032782E706E670300000000010104000000000100000000000000</Hex></SaveInfo>
-  <FullPath>/home/brian/dev/DICOM-Commander/External/icons/pacs_echo@2x.png</FullPath>
-  <PartialPath>External\icons\pacs_echo@2x.png</PartialPath>
-  <ImageSpecification>
-   <Comment></Comment>
-   <Device>31</Device>
-   <Height>32</Height>
-   <Orientation>0</Orientation>
-   <Platform>15</Platform>
-   <Resolution>144</Resolution>
-   <Width>32</Width>
-   <HeightDouble>32</HeightDouble>
-   <WidthDouble>32</WidthDouble>
-  </ImageSpecification>
- </ImageRepresentation>
- <ImageRepresentation>
-  <SaveInfo><Hex bytes="95">00F1D173010201000000003F2F686F6D652F627269616E2F6465762F4449434F4D2D436F6D6D616E6465722F45787465726E616C2F69636F6E732F706163735F6563686F4033782E706E670300000000010104000000000100000000000000</Hex></SaveInfo>
-  <FullPath>/home/brian/dev/DICOM-Commander/External/icons/pacs_echo@3x.png</FullPath>
-  <PartialPath>External\icons\pacs_echo@3x.png</PartialPath>
-  <ImageSpecification>
-   <Comment></Comment>
-   <Device>31</Device>
-   <Height>32</Height>
-   <Orientation>0</Orientation>
-   <Platform>15</Platform>
-   <Resolution>216</Resolution>
-   <Width>32</Width>
-   <HeightDouble>32</HeightDouble>
-   <WidthDouble>32</WidthDouble>
-  </ImageSpecification>
- </ImageRepresentation>
-</block>
-<block type="MultiImage" ID="1510795263">
- <ObjName>pacs_query</ObjName>
- <ObjContainerID>0</ObjContainerID>
- <ItemName>pacs_query</ItemName>
- <ImageRepresentation>
-  <SaveInfo><Hex bytes="93">00F1D173010201000000003D2F686F6D652F627269616E2F6465762F4449434F4D2D436F6D6D616E6465722F45787465726E616C2F69636F6E732F706163735F71756572792E706E670300000000010104000000000100000000000000</Hex></SaveInfo>
-  <FullPath>/home/brian/dev/DICOM-Commander/External/icons/pacs_query.png</FullPath>
-  <PartialPath>External\icons\pacs_query.png</PartialPath>
-  <ImageSpecification>
-   <Comment></Comment>
-   <Device>31</Device>
-   <Height>32</Height>
-   <Orientation>0</Orientation>
-   <Platform>15</Platform>
-   <Resolution>72</Resolution>
-   <Width>32</Width>
-   <HeightDouble>32</HeightDouble>
-   <WidthDouble>32</WidthDouble>
-  </ImageSpecification>
- </ImageRepresentation>
- <ImageRepresentation>
-  <SaveInfo><Hex bytes="96">00F1D17301020100000000402F686F6D652F627269616E2F6465762F4449434F4D2D436F6D6D616E6465722F45787465726E616C2F69636F6E732F706163735F71756572794032782E706E670300000000010104000000000100000000000000</Hex></SaveInfo>
-  <FullPath>/home/brian/dev/DICOM-Commander/External/icons/pacs_query@2x.png</FullPath>
-  <PartialPath>External\icons\pacs_query@2x.png</PartialPath>
-  <ImageSpecification>
-   <Comment></Comment>
-   <Device>31</Device>
-   <Height>32</Height>
-   <Orientation>0</Orientation>
-   <Platform>15</Platform>
-   <Resolution>144</Resolution>
-   <Width>32</Width>
-   <HeightDouble>32</HeightDouble>
-   <WidthDouble>32</WidthDouble>
-  </ImageSpecification>
- </ImageRepresentation>
- <ImageRepresentation>
-  <SaveInfo><Hex bytes="96">00F1D17301020100000000402F686F6D652F627269616E2F6465762F4449434F4D2D436F6D6D616E6465722F45787465726E616C2F69636F6E732F706163735F71756572794033782E706E670300000000010104000000000100000000000000</Hex></SaveInfo>
-  <FullPath>/home/brian/dev/DICOM-Commander/External/icons/pacs_query@3x.png</FullPath>
-  <PartialPath>External\icons\pacs_query@3x.png</PartialPath>
-  <ImageSpecification>
-   <Comment></Comment>
-   <Device>31</Device>
-   <Height>32</Height>
-   <Orientation>0</Orientation>
-   <Platform>15</Platform>
-   <Resolution>216</Resolution>
-   <Width>32</Width>
-   <HeightDouble>32</HeightDouble>
-   <WidthDouble>32</WidthDouble>
-  </ImageSpecification>
- </ImageRepresentation>
-</block>
 <block type="Folder" ID="408590335">
  <ObjName>VerticalToolBar</ObjName>
  <ObjContainerID>0</ObjContainerID>
@@ -7230,6 +5931,26 @@
  <ItemFlags>1</ItemFlags>
  <IsInterface>0</IsInterface>
  <Compatibility></Compatibility>
+ <HookInstance>
+  <ItemName>Paint</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>7593983</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Paint(g As Graphics, areas() As Rect)</SourceLine>
+   <SourceLine>// Background (optional)</SourceLine>
+   <SourceLine>g.DrawingColor = Color.RGB(30, 30, 30)</SourceLine>
+   <SourceLine>g.FillRectangle(0, 0, g.Width, g.Height)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Purple border</SourceLine>
+   <SourceLine>g.DrawingColor = Color.RGB(&amp;h8B, &amp;h5C, &amp;hF6) // #8B5CF6</SourceLine>
+   <SourceLine>g.PenSize = 1</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>g.DrawRectangle(0, 0, g.Width, g.Height)</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+ </HookInstance>
  <Hook>
   <ItemName>MoveLeftEvent</ItemName>
   <TextEncoding>134217984</TextEncoding>
@@ -7919,6 +6640,1333 @@
   <PartID>1006333951</PartID>
  </Control>
 </block>
+<block type="Folder" ID="1890957311">
+ <ObjName>AETs</ObjName>
+ <ObjContainerID>0</ObjContainerID>
+</block>
+<block type="DesktopWindow" ID="1471320063">
+ <ObjName>AEEndpointView</ObjName>
+ <ObjContainerID>1890957311</ObjContainerID>
+ <IsClass>1</IsClass>
+ <Superclass>DesktopContainer</Superclass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <HookInstance>
+  <ItemName>Paint</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>6866943</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub Paint(g As Graphics, areas() As Rect)</SourceLine>
+   <SourceLine>// Background (optional)</SourceLine>
+   <SourceLine>g.DrawingColor = Color.RGB(30, 30, 30)</SourceLine>
+   <SourceLine>g.FillRectangle(0, 0, g.Width, g.Height)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Purple border</SourceLine>
+   <SourceLine>g.DrawingColor = Color.RGB(&amp;h8B, &amp;h5C, &amp;hF6) // #8B5CF6</SourceLine>
+   <SourceLine>g.PenSize = 1</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>g.DrawRectangle(0, 0, g.Width, g.Height)</SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+ </HookInstance>
+ <Hook>
+  <ItemName>Echo</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams>aet as string, host as string, port as string</ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Hook>
+  <ItemName>Query</ItemName>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>33</ItemFlags>
+  <SystemFlags>0</SystemFlags>
+  <ItemParams>aet as string, host as string, port as string</ItemParams>
+  <ItemResult></ItemResult>
+ </Hook>
+ <Property>
+  <ItemName>Host</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>887089151</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Host As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Host As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>HostTextBox.Text  = value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>return HostTextBox.Text</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>Port</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1385998335</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Port As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Port As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>PortTextBox.Text = value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>return PortTextBox.Text</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>AET</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>382975999</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>AET As String</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>AET As String</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>AETTextBox.Text = value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>return AETTextBox.Text</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <PropertyVal Name="Composited">False</PropertyVal>
+ <PropertyVal Name="Transparent">False</PropertyVal>
+ <PropertyVal Name="AllowTabs">True</PropertyVal>
+ <PropertyVal Name="AllowFocus">False</PropertyVal>
+ <PropertyVal Name="HasBackgroundColor">False</PropertyVal>
+ <PropertyVal Name="Backdrop">0</PropertyVal>
+ <PropertyVal Name="BackgroundColor">&amp;hFFFFFF</PropertyVal>
+ <PropertyVal Name="Visible">True</PropertyVal>
+ <PropertyVal Name="AllowFocusRing">False</PropertyVal>
+ <PropertyVal Name="Tooltip"></PropertyVal>
+ <PropertyVal Name="Enabled">True</PropertyVal>
+ <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
+ <PropertyVal Name="TabStop">True</PropertyVal>
+ <PropertyVal Name="TabPanelIndex">0</PropertyVal>
+ <PropertyVal Name="TabIndex">0</PropertyVal>
+ <PropertyVal Name="LockBottom">True</PropertyVal>
+ <PropertyVal Name="LockRight">True</PropertyVal>
+ <PropertyVal Name="LockTop">True</PropertyVal>
+ <PropertyVal Name="LockLeft">False</PropertyVal>
+ <PropertyVal Name="Top">0</PropertyVal>
+ <PropertyVal Name="Left">0</PropertyVal>
+ <PropertyVal Name="InitialParent"></PropertyVal>
+ <PropertyVal Name="Height">72</PropertyVal>
+ <PropertyVal Name="Width">512</PropertyVal>
+ <PropertyVal Name="Index">-2147483648</PropertyVal>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Width</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Size</PropertyGroup>
+   <PropertyValue>300</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Height</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Size</PropertyGroup>
+   <PropertyValue>300</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>InitialParent</ObjName>
+   <PropertyGroup>Position</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>LockLeft</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>True</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>LockTop</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>True</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>LockRight</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>False</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>LockBottom</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>False</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>TabIndex</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>TabPanelIndex</ObjName>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>TabStop</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>True</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>AllowAutoDeactivate</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Appearance</PropertyGroup>
+   <PropertyValue>True</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Enabled</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Appearance</PropertyGroup>
+   <PropertyValue>True</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Tooltip</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Appearance</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>AllowFocusRing</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Appearance</PropertyGroup>
+   <PropertyValue>False</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Visible</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Appearance</PropertyGroup>
+   <PropertyValue>True</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>BackgroundColor</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Background</PropertyGroup>
+   <PropertyValue>&amp;hFFFFFF</PropertyValue>
+   <ItemType>ColorGroup</ItemType>
+   <EditorType>ColorGroup</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Backdrop</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Background</PropertyGroup>
+   <ItemType>Picture</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>HasBackgroundColor</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Background</PropertyGroup>
+   <PropertyValue>False</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>AllowFocus</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>False</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>AllowTabs</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>True</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Transparent</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>False</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Composited</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Window Behavior</PropertyGroup>
+   <PropertyValue>False</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Host</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Port</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>AET</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <ItemType>String</ItemType>
+   <EditorType>MultiLineEditor</EditorType>
+  </ViewProperty>
+ </ViewBehavior>
+ <ControlBehavior>
+  <Superclass>DesktopLabel</Superclass>
+ </ControlBehavior>
+ <ControlBehavior>
+  <Superclass>DesktopLabel</Superclass>
+ </ControlBehavior>
+ <ControlBehavior>
+  <Superclass>DesktopLabel</Superclass>
+ </ControlBehavior>
+ <ControlBehavior>
+  <Superclass>DesktopTextField</Superclass>
+ </ControlBehavior>
+ <ControlBehavior>
+  <Superclass>DesktopTextField</Superclass>
+ </ControlBehavior>
+ <ControlBehavior>
+  <Superclass>DesktopTextField</Superclass>
+ </ControlBehavior>
+ <ControlBehavior>
+  <Superclass>DesktopBevelButton</Superclass>
+  <HookInstance>
+   <ItemName>Pressed</ItemName>
+   <Compatibility></Compatibility>
+   <Visible>1</Visible>
+   <PartID>273061887</PartID>
+   <ItemSource>
+    <TextEncoding>134217984</TextEncoding>
+    <SourceLine>Sub Pressed()</SourceLine>
+    <SourceLine>RaiseEvent Echo( AET, Host, Port)</SourceLine>
+    <SourceLine></SourceLine>
+    <SourceLine>End Sub</SourceLine>
+   </ItemSource>
+  </HookInstance>
+ </ControlBehavior>
+ <ControlBehavior>
+  <Superclass>DesktopBevelButton</Superclass>
+ </ControlBehavior>
+ <Control>
+  <ControlClass>DesktopLabel</ControlClass>
+  <ItemName>DesktopLabel</ItemName>
+  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
+  <PropertyVal Name="Bold">False</PropertyVal>
+  <PropertyVal Name="Enabled">True</PropertyVal>
+  <PropertyVal Name="FontName">System</PropertyVal>
+  <PropertyVal Name="FontSize">0.0</PropertyVal>
+  <PropertyVal Name="FontUnit">0</PropertyVal>
+  <PropertyVal Name="Height">20</PropertyVal>
+  <PropertyVal Name="Index">-2147483648</PropertyVal>
+  <PropertyVal Name="Italic">False</PropertyVal>
+  <PropertyVal Name="Left">13</PropertyVal>
+  <PropertyVal Name="LockBottom">True</PropertyVal>
+  <PropertyVal Name="LockLeft">True</PropertyVal>
+  <PropertyVal Name="LockRight">False</PropertyVal>
+  <PropertyVal Name="LockTop">False</PropertyVal>
+  <PropertyVal Name="Multiline">False</PropertyVal>
+  <PropertyVal Name="Name">Label1</PropertyVal>
+  <PropertyVal Name="Scope">0</PropertyVal>
+  <PropertyVal Name="Selectable">False</PropertyVal>
+  <PropertyVal Name="Super">DesktopLabel</PropertyVal>
+  <PropertyVal Name="TabIndex">0</PropertyVal>
+  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
+  <PropertyVal Name="TabStop">True</PropertyVal>
+  <PropertyVal Name="Text">AE Title</PropertyVal>
+  <PropertyVal Name="TextAlignment">0</PropertyVal>
+  <PropertyVal Name="TextColor">&amp;h000000</PropertyVal>
+  <PropertyVal Name="Tooltip"></PropertyVal>
+  <PropertyVal Name="Top">27</PropertyVal>
+  <PropertyVal Name="Transparent">False</PropertyVal>
+  <PropertyVal Name="Underline">False</PropertyVal>
+  <PropertyVal Name="Visible">True</PropertyVal>
+  <PropertyVal Name="Width">50</PropertyVal>
+  <ControlIndex>0</ControlIndex>
+  <Locked>1</Locked>
+  <PartID>387604479</PartID>
+ </Control>
+ <Control>
+  <ControlClass>DesktopLabel</ControlClass>
+  <ItemName>DesktopLabel</ItemName>
+  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
+  <PropertyVal Name="Bold">False</PropertyVal>
+  <PropertyVal Name="Enabled">True</PropertyVal>
+  <PropertyVal Name="FontName">System</PropertyVal>
+  <PropertyVal Name="FontSize">0.0</PropertyVal>
+  <PropertyVal Name="FontUnit">0</PropertyVal>
+  <PropertyVal Name="Height">20</PropertyVal>
+  <PropertyVal Name="Index">-2147483648</PropertyVal>
+  <PropertyVal Name="Italic">False</PropertyVal>
+  <PropertyVal Name="Left">158</PropertyVal>
+  <PropertyVal Name="LockBottom">True</PropertyVal>
+  <PropertyVal Name="LockLeft">True</PropertyVal>
+  <PropertyVal Name="LockRight">False</PropertyVal>
+  <PropertyVal Name="LockTop">False</PropertyVal>
+  <PropertyVal Name="Multiline">False</PropertyVal>
+  <PropertyVal Name="Name">Label2</PropertyVal>
+  <PropertyVal Name="Scope">0</PropertyVal>
+  <PropertyVal Name="Selectable">False</PropertyVal>
+  <PropertyVal Name="Super">DesktopLabel</PropertyVal>
+  <PropertyVal Name="TabIndex">1</PropertyVal>
+  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
+  <PropertyVal Name="TabStop">True</PropertyVal>
+  <PropertyVal Name="Text">Host</PropertyVal>
+  <PropertyVal Name="TextAlignment">0</PropertyVal>
+  <PropertyVal Name="TextColor">&amp;h000000</PropertyVal>
+  <PropertyVal Name="Tooltip"></PropertyVal>
+  <PropertyVal Name="Top">27</PropertyVal>
+  <PropertyVal Name="Transparent">False</PropertyVal>
+  <PropertyVal Name="Underline">False</PropertyVal>
+  <PropertyVal Name="Visible">True</PropertyVal>
+  <PropertyVal Name="Width">50</PropertyVal>
+  <ControlIndex>1</ControlIndex>
+  <Locked>1</Locked>
+  <PartID>1233162239</PartID>
+ </Control>
+ <Control>
+  <ControlClass>DesktopLabel</ControlClass>
+  <ItemName>DesktopLabel</ItemName>
+  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
+  <PropertyVal Name="Bold">False</PropertyVal>
+  <PropertyVal Name="Enabled">True</PropertyVal>
+  <PropertyVal Name="FontName">System</PropertyVal>
+  <PropertyVal Name="FontSize">0.0</PropertyVal>
+  <PropertyVal Name="FontUnit">0</PropertyVal>
+  <PropertyVal Name="Height">20</PropertyVal>
+  <PropertyVal Name="Index">-2147483648</PropertyVal>
+  <PropertyVal Name="InitialParent"></PropertyVal>
+  <PropertyVal Name="Italic">False</PropertyVal>
+  <PropertyVal Name="Left">294</PropertyVal>
+  <PropertyVal Name="LockBottom">True</PropertyVal>
+  <PropertyVal Name="LockLeft">True</PropertyVal>
+  <PropertyVal Name="LockRight">False</PropertyVal>
+  <PropertyVal Name="LockTop">False</PropertyVal>
+  <PropertyVal Name="Multiline">False</PropertyVal>
+  <PropertyVal Name="Name">Label3</PropertyVal>
+  <PropertyVal Name="Scope">0</PropertyVal>
+  <PropertyVal Name="Selectable">False</PropertyVal>
+  <PropertyVal Name="Super">DesktopLabel</PropertyVal>
+  <PropertyVal Name="TabIndex">2</PropertyVal>
+  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
+  <PropertyVal Name="TabStop">True</PropertyVal>
+  <PropertyVal Name="Text">Port</PropertyVal>
+  <PropertyVal Name="TextAlignment">0</PropertyVal>
+  <PropertyVal Name="TextColor">&amp;h000000</PropertyVal>
+  <PropertyVal Name="Tooltip"></PropertyVal>
+  <PropertyVal Name="Top">27</PropertyVal>
+  <PropertyVal Name="Transparent">False</PropertyVal>
+  <PropertyVal Name="Underline">False</PropertyVal>
+  <PropertyVal Name="Visible">True</PropertyVal>
+  <PropertyVal Name="Width">37</PropertyVal>
+  <ControlIndex>2</ControlIndex>
+  <Locked>1</Locked>
+  <PartID>677890047</PartID>
+ </Control>
+ <Control>
+  <ControlClass>DesktopTextField</ControlClass>
+  <ItemName>DesktopTextField</ItemName>
+  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
+  <PropertyVal Name="AllowFocusRing">True</PropertyVal>
+  <PropertyVal Name="AllowSpellChecking">False</PropertyVal>
+  <PropertyVal Name="AllowTabs">False</PropertyVal>
+  <PropertyVal Name="BackgroundColor">&amp;hFFFFFF</PropertyVal>
+  <PropertyVal Name="Bold">False</PropertyVal>
+  <PropertyVal Name="Enabled">True</PropertyVal>
+  <PropertyVal Name="FontName">System</PropertyVal>
+  <PropertyVal Name="FontSize">0.0</PropertyVal>
+  <PropertyVal Name="FontUnit">0</PropertyVal>
+  <PropertyVal Name="Format"></PropertyVal>
+  <PropertyVal Name="HasBorder">True</PropertyVal>
+  <PropertyVal Name="Height">27</PropertyVal>
+  <PropertyVal Name="Hint"></PropertyVal>
+  <PropertyVal Name="Index">-2147483648</PropertyVal>
+  <PropertyVal Name="Italic">False</PropertyVal>
+  <PropertyVal Name="Left">66</PropertyVal>
+  <PropertyVal Name="LockBottom">True</PropertyVal>
+  <PropertyVal Name="LockLeft">True</PropertyVal>
+  <PropertyVal Name="LockRight">False</PropertyVal>
+  <PropertyVal Name="LockTop">False</PropertyVal>
+  <PropertyVal Name="MaximumCharactersAllowed">0</PropertyVal>
+  <PropertyVal Name="Name">AETTextBox</PropertyVal>
+  <PropertyVal Name="Password">False</PropertyVal>
+  <PropertyVal Name="ReadOnly">False</PropertyVal>
+  <PropertyVal Name="Scope">0</PropertyVal>
+  <PropertyVal Name="Super">DesktopTextField</PropertyVal>
+  <PropertyVal Name="TabIndex">3</PropertyVal>
+  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
+  <PropertyVal Name="TabStop">True</PropertyVal>
+  <PropertyVal Name="Text"></PropertyVal>
+  <PropertyVal Name="TextAlignment">0</PropertyVal>
+  <PropertyVal Name="TextColor">&amp;h000000</PropertyVal>
+  <PropertyVal Name="Tooltip"></PropertyVal>
+  <PropertyVal Name="Top">20</PropertyVal>
+  <PropertyVal Name="Transparent">False</PropertyVal>
+  <PropertyVal Name="Underline">False</PropertyVal>
+  <PropertyVal Name="ValidationMask"></PropertyVal>
+  <PropertyVal Name="Visible">True</PropertyVal>
+  <PropertyVal Name="Width">80</PropertyVal>
+  <ControlIndex>3</ControlIndex>
+  <Locked>1</Locked>
+  <PartID>1827946495</PartID>
+ </Control>
+ <Control>
+  <ControlClass>DesktopTextField</ControlClass>
+  <ItemName>DesktopTextField</ItemName>
+  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
+  <PropertyVal Name="AllowFocusRing">True</PropertyVal>
+  <PropertyVal Name="AllowSpellChecking">False</PropertyVal>
+  <PropertyVal Name="AllowTabs">False</PropertyVal>
+  <PropertyVal Name="BackgroundColor">&amp;hFFFFFF</PropertyVal>
+  <PropertyVal Name="Bold">False</PropertyVal>
+  <PropertyVal Name="Enabled">True</PropertyVal>
+  <PropertyVal Name="FontName">System</PropertyVal>
+  <PropertyVal Name="FontSize">0.0</PropertyVal>
+  <PropertyVal Name="FontUnit">0</PropertyVal>
+  <PropertyVal Name="Format"></PropertyVal>
+  <PropertyVal Name="HasBorder">True</PropertyVal>
+  <PropertyVal Name="Height">27</PropertyVal>
+  <PropertyVal Name="Hint"></PropertyVal>
+  <PropertyVal Name="Index">-2147483648</PropertyVal>
+  <PropertyVal Name="Italic">False</PropertyVal>
+  <PropertyVal Name="Left">202</PropertyVal>
+  <PropertyVal Name="LockBottom">True</PropertyVal>
+  <PropertyVal Name="LockLeft">True</PropertyVal>
+  <PropertyVal Name="LockRight">False</PropertyVal>
+  <PropertyVal Name="LockTop">False</PropertyVal>
+  <PropertyVal Name="MaximumCharactersAllowed">0</PropertyVal>
+  <PropertyVal Name="Name">HostTextBox</PropertyVal>
+  <PropertyVal Name="Password">False</PropertyVal>
+  <PropertyVal Name="ReadOnly">False</PropertyVal>
+  <PropertyVal Name="Scope">0</PropertyVal>
+  <PropertyVal Name="Super">DesktopTextField</PropertyVal>
+  <PropertyVal Name="TabIndex">4</PropertyVal>
+  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
+  <PropertyVal Name="TabStop">True</PropertyVal>
+  <PropertyVal Name="Text"></PropertyVal>
+  <PropertyVal Name="TextAlignment">0</PropertyVal>
+  <PropertyVal Name="TextColor">&amp;h000000</PropertyVal>
+  <PropertyVal Name="Tooltip"></PropertyVal>
+  <PropertyVal Name="Top">20</PropertyVal>
+  <PropertyVal Name="Transparent">False</PropertyVal>
+  <PropertyVal Name="Underline">False</PropertyVal>
+  <PropertyVal Name="ValidationMask"></PropertyVal>
+  <PropertyVal Name="Visible">True</PropertyVal>
+  <PropertyVal Name="Width">80</PropertyVal>
+  <ControlIndex>4</ControlIndex>
+  <Locked>1</Locked>
+  <PartID>1573900287</PartID>
+ </Control>
+ <Control>
+  <ControlClass>DesktopTextField</ControlClass>
+  <ItemName>DesktopTextField</ItemName>
+  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
+  <PropertyVal Name="AllowFocusRing">True</PropertyVal>
+  <PropertyVal Name="AllowSpellChecking">False</PropertyVal>
+  <PropertyVal Name="AllowTabs">False</PropertyVal>
+  <PropertyVal Name="BackgroundColor">&amp;hFFFFFF</PropertyVal>
+  <PropertyVal Name="Bold">False</PropertyVal>
+  <PropertyVal Name="Enabled">True</PropertyVal>
+  <PropertyVal Name="FontName">System</PropertyVal>
+  <PropertyVal Name="FontSize">0.0</PropertyVal>
+  <PropertyVal Name="FontUnit">0</PropertyVal>
+  <PropertyVal Name="Format"></PropertyVal>
+  <PropertyVal Name="HasBorder">True</PropertyVal>
+  <PropertyVal Name="Height">27</PropertyVal>
+  <PropertyVal Name="Hint"></PropertyVal>
+  <PropertyVal Name="Index">-2147483648</PropertyVal>
+  <PropertyVal Name="InitialParent"></PropertyVal>
+  <PropertyVal Name="Italic">False</PropertyVal>
+  <PropertyVal Name="Left">324</PropertyVal>
+  <PropertyVal Name="LockBottom">True</PropertyVal>
+  <PropertyVal Name="LockLeft">True</PropertyVal>
+  <PropertyVal Name="LockRight">False</PropertyVal>
+  <PropertyVal Name="LockTop">False</PropertyVal>
+  <PropertyVal Name="MaximumCharactersAllowed">0</PropertyVal>
+  <PropertyVal Name="Name">PortTextBox</PropertyVal>
+  <PropertyVal Name="Password">False</PropertyVal>
+  <PropertyVal Name="ReadOnly">False</PropertyVal>
+  <PropertyVal Name="Scope">0</PropertyVal>
+  <PropertyVal Name="Super">DesktopTextField</PropertyVal>
+  <PropertyVal Name="TabIndex">5</PropertyVal>
+  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
+  <PropertyVal Name="TabStop">True</PropertyVal>
+  <PropertyVal Name="Text"></PropertyVal>
+  <PropertyVal Name="TextAlignment">3</PropertyVal>
+  <PropertyVal Name="TextColor">&amp;h000000</PropertyVal>
+  <PropertyVal Name="Tooltip"></PropertyVal>
+  <PropertyVal Name="Top">20</PropertyVal>
+  <PropertyVal Name="Transparent">False</PropertyVal>
+  <PropertyVal Name="Underline">False</PropertyVal>
+  <PropertyVal Name="ValidationMask"></PropertyVal>
+  <PropertyVal Name="Visible">True</PropertyVal>
+  <PropertyVal Name="Width">80</PropertyVal>
+  <ControlIndex>5</ControlIndex>
+  <Locked>1</Locked>
+  <PartID>1164845055</PartID>
+ </Control>
+ <Control>
+  <ControlClass>DesktopBevelButton</ControlClass>
+  <ItemName>DesktopBevelButton</ItemName>
+  <PropertyVal Name="Active">False</PropertyVal>
+  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
+  <PropertyVal Name="AllowFocus">True</PropertyVal>
+  <PropertyVal Name="AllowTabStop">True</PropertyVal>
+  <PropertyVal Name="BackgroundColor">&amp;h00000000</PropertyVal>
+  <PropertyVal Name="BevelStyle">0</PropertyVal>
+  <PropertyVal Name="Bold">False</PropertyVal>
+  <PropertyVal Name="ButtonStyle">0</PropertyVal>
+  <PropertyVal Name="Caption"></PropertyVal>
+  <PropertyVal Name="CaptionAlignment">3</PropertyVal>
+  <PropertyVal Name="CaptionDelta">0</PropertyVal>
+  <PropertyVal Name="CaptionPosition">2</PropertyVal>
+  <PropertyVal Name="Enabled">True</PropertyVal>
+  <PropertyVal Name="FontName">System</PropertyVal>
+  <PropertyVal Name="FontSize">0.0</PropertyVal>
+  <PropertyVal Name="FontUnit">0</PropertyVal>
+  <PropertyVal Name="HasBackgroundColor">False</PropertyVal>
+  <PropertyVal Name="Height">32</PropertyVal>
+  <PropertyVal Name="Icon">563902463</PropertyVal>
+  <PropertyVal Name="IconAlignment">0</PropertyVal>
+  <PropertyVal Name="IconDeltaX">0</PropertyVal>
+  <PropertyVal Name="IconDeltaY">0</PropertyVal>
+  <PropertyVal Name="Index">-2147483648</PropertyVal>
+  <PropertyVal Name="InitialParent"></PropertyVal>
+  <PropertyVal Name="Italic">False</PropertyVal>
+  <PropertyVal Name="Left">423</PropertyVal>
+  <PropertyVal Name="LockBottom">False</PropertyVal>
+  <PropertyVal Name="LockLeft">True</PropertyVal>
+  <PropertyVal Name="LockRight">False</PropertyVal>
+  <PropertyVal Name="LockTop">True</PropertyVal>
+  <PropertyVal Name="MenuStyle">0</PropertyVal>
+  <PropertyVal Name="Name">EchoButton</PropertyVal>
+  <PropertyVal Name="PanelIndex">0</PropertyVal>
+  <PropertyVal Name="Scope">0</PropertyVal>
+  <PropertyVal Name="Super">DesktopBevelButton</PropertyVal>
+  <PropertyVal Name="TabIndex">6</PropertyVal>
+  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
+  <PropertyVal Name="TextColor">&amp;h00000000</PropertyVal>
+  <PropertyVal Name="Tooltip"></PropertyVal>
+  <PropertyVal Name="Top">18</PropertyVal>
+  <PropertyVal Name="Transparent">False</PropertyVal>
+  <PropertyVal Name="Underline">False</PropertyVal>
+  <PropertyVal Name="Value">False</PropertyVal>
+  <PropertyVal Name="Visible">True</PropertyVal>
+  <PropertyVal Name="Width">32</PropertyVal>
+  <PropertyVal Name="_mIndex">0</PropertyVal>
+  <PropertyVal Name="_mInitialParent"></PropertyVal>
+  <PropertyVal Name="_mName"></PropertyVal>
+  <PropertyVal Name="_mPanelIndex">0</PropertyVal>
+  <ControlIndex>6</ControlIndex>
+  <Locked>0</Locked>
+  <PartID>1319497727</PartID>
+ </Control>
+ <Control>
+  <ControlClass>DesktopBevelButton</ControlClass>
+  <ItemName>DesktopBevelButton</ItemName>
+  <PropertyVal Name="Active">False</PropertyVal>
+  <PropertyVal Name="AllowAutoDeactivate">True</PropertyVal>
+  <PropertyVal Name="AllowFocus">True</PropertyVal>
+  <PropertyVal Name="AllowTabStop">True</PropertyVal>
+  <PropertyVal Name="BackgroundColor">&amp;h00000000</PropertyVal>
+  <PropertyVal Name="BevelStyle">0</PropertyVal>
+  <PropertyVal Name="Bold">False</PropertyVal>
+  <PropertyVal Name="ButtonStyle">0</PropertyVal>
+  <PropertyVal Name="Caption"></PropertyVal>
+  <PropertyVal Name="CaptionAlignment">3</PropertyVal>
+  <PropertyVal Name="CaptionDelta">0</PropertyVal>
+  <PropertyVal Name="CaptionPosition">1</PropertyVal>
+  <PropertyVal Name="Enabled">True</PropertyVal>
+  <PropertyVal Name="FontName">System</PropertyVal>
+  <PropertyVal Name="FontSize">0.0</PropertyVal>
+  <PropertyVal Name="FontUnit">0</PropertyVal>
+  <PropertyVal Name="HasBackgroundColor">False</PropertyVal>
+  <PropertyVal Name="Height">32</PropertyVal>
+  <PropertyVal Name="Icon">1510795263</PropertyVal>
+  <PropertyVal Name="IconAlignment">0</PropertyVal>
+  <PropertyVal Name="IconDeltaX">0</PropertyVal>
+  <PropertyVal Name="IconDeltaY">0</PropertyVal>
+  <PropertyVal Name="Index">-2147483648</PropertyVal>
+  <PropertyVal Name="InitialParent"></PropertyVal>
+  <PropertyVal Name="Italic">False</PropertyVal>
+  <PropertyVal Name="Left">467</PropertyVal>
+  <PropertyVal Name="LockBottom">False</PropertyVal>
+  <PropertyVal Name="LockLeft">True</PropertyVal>
+  <PropertyVal Name="LockRight">False</PropertyVal>
+  <PropertyVal Name="LockTop">True</PropertyVal>
+  <PropertyVal Name="MenuStyle">0</PropertyVal>
+  <PropertyVal Name="Name">SearchButton</PropertyVal>
+  <PropertyVal Name="PanelIndex">0</PropertyVal>
+  <PropertyVal Name="Scope">0</PropertyVal>
+  <PropertyVal Name="Super">DesktopBevelButton</PropertyVal>
+  <PropertyVal Name="TabIndex">7</PropertyVal>
+  <PropertyVal Name="TabPanelIndex">0</PropertyVal>
+  <PropertyVal Name="TextColor">&amp;h00000000</PropertyVal>
+  <PropertyVal Name="Tooltip"></PropertyVal>
+  <PropertyVal Name="Top">18</PropertyVal>
+  <PropertyVal Name="Transparent">False</PropertyVal>
+  <PropertyVal Name="Underline">False</PropertyVal>
+  <PropertyVal Name="Value">False</PropertyVal>
+  <PropertyVal Name="Visible">True</PropertyVal>
+  <PropertyVal Name="Width">32</PropertyVal>
+  <PropertyVal Name="_mIndex">0</PropertyVal>
+  <PropertyVal Name="_mInitialParent"></PropertyVal>
+  <PropertyVal Name="_mName"></PropertyVal>
+  <PropertyVal Name="_mPanelIndex">0</PropertyVal>
+  <ControlIndex>7</ControlIndex>
+  <Locked>0</Locked>
+  <PartID>101605375</PartID>
+ </Control>
+</block>
+<block type="MultiImage" ID="1510795263">
+ <ObjName>pacs_query</ObjName>
+ <ObjContainerID>1890957311</ObjContainerID>
+ <ItemName>pacs_query</ItemName>
+ <ImageRepresentation>
+  <SaveInfo><Hex bytes="93">00F1D173010201000000003D2F686F6D652F627269616E2F6465762F4449434F4D2D436F6D6D616E6465722F45787465726E616C2F69636F6E732F706163735F71756572792E706E670300000000010104000000000100000000000000</Hex></SaveInfo>
+  <FullPath>/home/brian/dev/DICOM-Commander/External/icons/pacs_query.png</FullPath>
+  <PartialPath>External\icons\pacs_query.png</PartialPath>
+  <ImageSpecification>
+   <Comment></Comment>
+   <Device>31</Device>
+   <Height>32</Height>
+   <Orientation>0</Orientation>
+   <Platform>15</Platform>
+   <Resolution>72</Resolution>
+   <Width>32</Width>
+   <HeightDouble>32</HeightDouble>
+   <WidthDouble>32</WidthDouble>
+  </ImageSpecification>
+ </ImageRepresentation>
+ <ImageRepresentation>
+  <SaveInfo><Hex bytes="96">00F1D17301020100000000402F686F6D652F627269616E2F6465762F4449434F4D2D436F6D6D616E6465722F45787465726E616C2F69636F6E732F706163735F71756572794032782E706E670300000000010104000000000100000000000000</Hex></SaveInfo>
+  <FullPath>/home/brian/dev/DICOM-Commander/External/icons/pacs_query@2x.png</FullPath>
+  <PartialPath>External\icons\pacs_query@2x.png</PartialPath>
+  <ImageSpecification>
+   <Comment></Comment>
+   <Device>31</Device>
+   <Height>32</Height>
+   <Orientation>0</Orientation>
+   <Platform>15</Platform>
+   <Resolution>144</Resolution>
+   <Width>32</Width>
+   <HeightDouble>32</HeightDouble>
+   <WidthDouble>32</WidthDouble>
+  </ImageSpecification>
+ </ImageRepresentation>
+ <ImageRepresentation>
+  <SaveInfo><Hex bytes="96">00F1D17301020100000000402F686F6D652F627269616E2F6465762F4449434F4D2D436F6D6D616E6465722F45787465726E616C2F69636F6E732F706163735F71756572794033782E706E670300000000010104000000000100000000000000</Hex></SaveInfo>
+  <FullPath>/home/brian/dev/DICOM-Commander/External/icons/pacs_query@3x.png</FullPath>
+  <PartialPath>External\icons\pacs_query@3x.png</PartialPath>
+  <ImageSpecification>
+   <Comment></Comment>
+   <Device>31</Device>
+   <Height>32</Height>
+   <Orientation>0</Orientation>
+   <Platform>15</Platform>
+   <Resolution>216</Resolution>
+   <Width>32</Width>
+   <HeightDouble>32</HeightDouble>
+   <WidthDouble>32</WidthDouble>
+  </ImageSpecification>
+ </ImageRepresentation>
+</block>
+<block type="MultiImage" ID="563902463">
+ <ObjName>pacs_echo</ObjName>
+ <ObjContainerID>1890957311</ObjContainerID>
+ <ItemName>pacs_echo</ItemName>
+ <ImageRepresentation>
+  <SaveInfo><Hex bytes="92">00F1D173010201000000003C2F686F6D652F627269616E2F6465762F4449434F4D2D436F6D6D616E6465722F45787465726E616C2F69636F6E732F706163735F6563686F2E706E670300000000010104000000000100000000000000</Hex></SaveInfo>
+  <FullPath>/home/brian/dev/DICOM-Commander/External/icons/pacs_echo.png</FullPath>
+  <PartialPath>External\icons\pacs_echo.png</PartialPath>
+  <ImageSpecification>
+   <Comment></Comment>
+   <Device>31</Device>
+   <Height>32</Height>
+   <Orientation>0</Orientation>
+   <Platform>15</Platform>
+   <Resolution>72</Resolution>
+   <Width>32</Width>
+   <HeightDouble>32</HeightDouble>
+   <WidthDouble>32</WidthDouble>
+  </ImageSpecification>
+ </ImageRepresentation>
+ <ImageRepresentation>
+  <SaveInfo><Hex bytes="95">00F1D173010201000000003F2F686F6D652F627269616E2F6465762F4449434F4D2D436F6D6D616E6465722F45787465726E616C2F69636F6E732F706163735F6563686F4032782E706E670300000000010104000000000100000000000000</Hex></SaveInfo>
+  <FullPath>/home/brian/dev/DICOM-Commander/External/icons/pacs_echo@2x.png</FullPath>
+  <PartialPath>External\icons\pacs_echo@2x.png</PartialPath>
+  <ImageSpecification>
+   <Comment></Comment>
+   <Device>31</Device>
+   <Height>32</Height>
+   <Orientation>0</Orientation>
+   <Platform>15</Platform>
+   <Resolution>144</Resolution>
+   <Width>32</Width>
+   <HeightDouble>32</HeightDouble>
+   <WidthDouble>32</WidthDouble>
+  </ImageSpecification>
+ </ImageRepresentation>
+ <ImageRepresentation>
+  <SaveInfo><Hex bytes="95">00F1D173010201000000003F2F686F6D652F627269616E2F6465762F4449434F4D2D436F6D6D616E6465722F45787465726E616C2F69636F6E732F706163735F6563686F4033782E706E670300000000010104000000000100000000000000</Hex></SaveInfo>
+  <FullPath>/home/brian/dev/DICOM-Commander/External/icons/pacs_echo@3x.png</FullPath>
+  <PartialPath>External\icons\pacs_echo@3x.png</PartialPath>
+  <ImageSpecification>
+   <Comment></Comment>
+   <Device>31</Device>
+   <Height>32</Height>
+   <Orientation>0</Orientation>
+   <Platform>15</Platform>
+   <Resolution>216</Resolution>
+   <Width>32</Width>
+   <HeightDouble>32</HeightDouble>
+   <WidthDouble>32</WidthDouble>
+  </ImageSpecification>
+ </ImageRepresentation>
+</block>
+<block type="Module" ID="1094053887">
+ <ObjName>dicom</ObjName>
+ <ObjContainerID>0</ObjContainerID>
+ <IsClass>0</IsClass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <Note>
+  <ItemName>PN VR</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1655826431</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <NoteLine>PN VR</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>1) family name</NoteLine>
+   <NoteLine>2) given name</NoteLine>
+   <NoteLine>3) middle name</NoteLine>
+   <NoteLine>4) name prefix</NoteLine>
+   <NoteLine>5) same suffix</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine>O'Brien^Brian^John^Dr^Phd</NoteLine>
+   <NoteLine></NoteLine>
+   <NoteLine></NoteLine>
+  </ItemSource>
+  <ItemFlags>0</ItemFlags>
+ </Note>
+ <Property>
+  <ItemName>dicomKeys</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>2041055231</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>dicomKeys As Dictionary</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>dicomKeys As Dictionary</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>mDictionary = value</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>if mDictionary = nil then</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>mDictionary = new Dictionary</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>mDictionary.Value("0008,0005") = "SpecificCharacterSet"</SourceLine>
+   <SourceLine>mDictionary.Value("0008,0020") = "Study Date"</SourceLine>
+   <SourceLine>mDictionary.Value("0008,0021") = "Series Date"</SourceLine>
+   <SourceLine>mDictionary.Value("0008,0030") = "Study Time"</SourceLine>
+   <SourceLine>mDictionary.Value("0008,0031") = "Series Time"</SourceLine>
+   <SourceLine>mDictionary.Value("0008,0050") = "Accession Number"</SourceLine>
+   <SourceLine>mDictionary.Value("0008,0052") ="QueryRetrieveLevel"</SourceLine>
+   <SourceLine>mDictionary.Value("0008,0054") ="Retrieve AE Title"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>mDictionary.Value("0008,0060") = "Modality"</SourceLine>
+   <SourceLine>mDictionary.Value("0008,1030") = "Study Description"</SourceLine>
+   <SourceLine>mDictionary.Value("0008,103E") = "Series Description"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>mDictionary.Value("0010,0010") = "Patient Name"</SourceLine>
+   <SourceLine>mDictionary.Value("0010,0020") = "Patient ID"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>mDictionary.Value("0020,000D") = "Study Instance UID"</SourceLine>
+   <SourceLine>mDictionary.Value("0020,000E") = "Series Instance UID"</SourceLine>
+   <SourceLine>mDictionary.Value("0020,0010") = "Study ID"</SourceLine>
+   <SourceLine>mDictionary.Value("0020,0011") = "Series Number"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>return mDictionary</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>FormDictionary</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1995120639</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>FormDictionary As Dictionary</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>FormDictionary As Dictionary</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <SetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Set</SourceLine>
+   <SourceLine>mFormDictionary = value</SourceLine>
+   <SourceLine>End Set</SourceLine>
+  </SetAccessor>
+  <GetAccessor>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Get</SourceLine>
+   <SourceLine>if mFormDictionary = nil then</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>mFormDictionary = new Dictionary</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>mFormDictionary.Value("0008,0020") = "Study Date"</SourceLine>
+   <SourceLine>mFormDictionary.Value("0008,0021") = "Series Date"</SourceLine>
+   <SourceLine>mFormDictionary.Value("0008,0030") = "Study Time"</SourceLine>
+   <SourceLine>mFormDictionary.Value("0008,0031") = "Series Time"</SourceLine>
+   <SourceLine>mFormDictionary.Value("0008,0050") = "Accession Number"</SourceLine>
+   <SourceLine>mFormDictionary.Value("0008,0054") ="Retrieve AE Title"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>mFormDictionary.Value("0008,0060") = "Modality"</SourceLine>
+   <SourceLine>mFormDictionary.Value("0008,1030") = "Study Description"</SourceLine>
+   <SourceLine>mFormDictionary.Value("0008,103E") = "Series Description"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>mFormDictionary.Value("0010,0010") = "Patient Name"</SourceLine>
+   <SourceLine>mFormDictionary.Value("0010,0020") = "Patient ID"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>mFormDictionary.Value("0020,0010") = "Study ID"</SourceLine>
+   <SourceLine>mFormDictionary.Value("0020,0011") = "Series Number"</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>return mFormDictionary</SourceLine>
+   <SourceLine>End Get</SourceLine>
+  </GetAccessor>
+ </Property>
+ <Property>
+  <ItemName>mDictionary</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1160495103</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mDictionary As Dictionary</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mDictionary As Dictionary</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>mFormDictionary</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1068212223</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>mFormDictionary As Dictionary</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>mFormDictionary As Dictionary</ItemDeclaration>
+  <ItemFlags>33</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+ </ViewBehavior>
+ <Enumeration>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>0</ItemFlags>
+  <ItemType>Integer</ItemType>
+  <BinaryEnum>0</BinaryEnum>
+  <ItemName>enumLEVELS</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1266649087</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>PATIENT</SourceLine>
+   <SourceLine>STUDY</SourceLine>
+   <SourceLine>SERIES</SourceLine>
+   <SourceLine>IMAGE</SourceLine>
+  </ItemSource>
+ </Enumeration>
+ <Enumeration>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemFlags>0</ItemFlags>
+  <ItemType>Integer</ItemType>
+  <BinaryEnum>0</BinaryEnum>
+  <ItemName>enumROOTS</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1241423871</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>PATIENT</SourceLine>
+   <SourceLine>STUDY</SourceLine>
+   <SourceLine>ANY</SourceLine>
+   <SourceLine>PATIENTSTUDY</SourceLine>
+   <SourceLine>WORKLIST</SourceLine>
+  </ItemSource>
+ </Enumeration>
+</block>
+<block type="Module" ID="1313435647">
+ <ObjName>ANode</ObjName>
+ <ObjContainerID>1094053887</ObjContainerID>
+ <IsClass>1</IsClass>
+ <ItemFlags>1</ItemFlags>
+ <IsInterface>0</IsInterface>
+ <Compatibility></Compatibility>
+ <Method>
+  <ItemName>AsDictionary</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>2123044863</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function AsDictionary() As Dictionary</SourceLine>
+   <SourceLine>dim d as new Dictionary</SourceLine>
+   <SourceLine>dim v as Variant</SourceLine>
+   <SourceLine>dim dobc as DicomObjectBaseClass</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim myProperties() as Introspection.PropertyInfo = Introspection.GetType(self).GetProperties</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>For i as Integer=0 to Ubound(myProperties)</SourceLine>
+   <SourceLine>v = myProperties(i).Value(self) //get the value</SourceLine>
+   <SourceLine>if v IsA DicomObjectBaseClass then   //test for type</SourceLine>
+   <SourceLine>dobc = DicomObjectBaseClass(v)</SourceLine>
+   <SourceLine>d.Value(dobc.GroupElement) = dobc.Value</SourceLine>
+   <SourceLine>end </SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>return d</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Dictionary</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>AsRow</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>162824191</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function AsRow() As String()</SourceLine>
+   <SourceLine>dim rh(-1) as String</SourceLine>
+   <SourceLine>dim v as Variant</SourceLine>
+   <SourceLine>dim dobc as DicomObjectBaseClass</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim myProperties() as Introspection.PropertyInfo = Introspection.GetType(self).GetProperties</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>For i as Integer=0 to Ubound(myProperties)</SourceLine>
+   <SourceLine>v = myProperties(i).Value(self) //get the value</SourceLine>
+   <SourceLine>if v IsA DicomObjectBaseClass then   //test for type</SourceLine>
+   <SourceLine>dobc = DicomObjectBaseClass(v)</SourceLine>
+   <SourceLine>if dobc.ShownOnUI then</SourceLine>
+   <SourceLine>rh.Append(dobc.Value)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end </SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>return rh</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String()</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>AsRowHeader</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1648193535</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function AsRowHeader() As String()</SourceLine>
+   <SourceLine>dim rh(-1) as String</SourceLine>
+   <SourceLine>dim v as Variant</SourceLine>
+   <SourceLine>dim dobc as DicomObjectBaseClass</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>Dim myProperties() as Introspection.PropertyInfo = Introspection.GetType(self).GetProperties</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>For i as Integer=0 to Ubound(myProperties)</SourceLine>
+   <SourceLine>v = myProperties(i).Value(self) //get the value</SourceLine>
+   <SourceLine>if v IsA DicomObjectBaseClass then   //test for type</SourceLine>
+   <SourceLine>dobc = DicomObjectBaseClass(v)</SourceLine>
+   <SourceLine>if dobc.ShownOnUI then</SourceLine>
+   <SourceLine>rh.Append(dobc.DisplayName)</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>end </SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>return rh</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>String()</ItemResult>
+ </Method>
+ <Method>
+  <ItemName>FromDictionary</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>2060439551</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Sub FromDictionary(d as Dictionary)</SourceLine>
+   <SourceLine>dim v as Variant</SourceLine>
+   <SourceLine>dim dobc as DicomObjectBaseClass</SourceLine>
+   <SourceLine>dim key as string</SourceLine>
+   <SourceLine>Dim myProperties() as Introspection.PropertyInfo = Introspection.GetType(self).GetProperties</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>for each key in d.Keys</SourceLine>
+   <SourceLine>For i as Integer=0 to Ubound(myProperties)</SourceLine>
+   <SourceLine>v = myProperties(i).Value(self) //get the value</SourceLine>
+   <SourceLine>if v IsA DicomObjectBaseClass then   //test for type</SourceLine>
+   <SourceLine>dobc = DicomObjectBaseClass(v)</SourceLine>
+   <SourceLine>if key = dobc.GroupElement then</SourceLine>
+   <SourceLine>dobc.Value = d.Value(key)</SourceLine>
+   <SourceLine>myProperties.Remove(i)</SourceLine>
+   <SourceLine>exit for</SourceLine>
+   <SourceLine>end</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Sub</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>d as Dictionary</ItemParams>
+  <ItemResult></ItemResult>
+ </Method>
+ <Property>
+  <ItemName>Children(-1)</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1323360255</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Children(-1) As dicom.ANode</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>Children(-1) As dicom.ANode</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <Property>
+  <ItemName>IsSelected</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>991510527</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>IsSelected As Boolean = false</SourceLine>
+   <SourceLine></SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <ItemDeclaration>IsSelected As Boolean = false</ItemDeclaration>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+ </Property>
+ <ViewBehavior>
+  <ViewProperty>
+   <ObjName>Name</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Index</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <PropertyValue>-2147483648</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Super</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>ID</PropertyGroup>
+   <ItemType>String</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Left</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>Top</ObjName>
+   <Visible>1</Visible>
+   <PropertyGroup>Position</PropertyGroup>
+   <PropertyValue>0</PropertyValue>
+   <ItemType>Integer</ItemType>
+  </ViewProperty>
+  <ViewProperty>
+   <ObjName>IsSelected</ObjName>
+   <PropertyGroup>Behavior</PropertyGroup>
+   <PropertyValue>false</PropertyValue>
+   <ItemType>Boolean</ItemType>
+  </ViewProperty>
+ </ViewBehavior>
+</block>
 <block type="UIState" ID="0">
  <WarningPreferences>
   <ItemName>5</ItemName>
@@ -7943,16 +7991,30 @@
   <UnitID>Private Function NodeFromDict(d As Dictionary) As DicomNode</UnitID>
   <lineNum>27</lineNum>
  </BreakPointGroup>
+ <BreakPointGroup>
+  <PartID>28317695</PartID>
+  <ItemName></ItemName>
+  <UnitType>Method</UnitType>
+  <UnitID>Sub Query(r as dicom.EnumROOTS=dicom.enumROOTS.STUDY, l as dicom.enumLEVELS=dicom.enumLEVELS.STUDY, queree as dictionary, gets as Dictionary, res as dicom.ANode)</UnitID>
+  <lineNum>1</lineNum>
+ </BreakPointGroup>
+ <BreakPointGroup>
+  <PartID>2019475455</PartID>
+  <ItemName>SyncToolbar1</ItemName>
+  <UnitType>Event Handler</UnitType>
+  <UnitID>Sub StartEvent()</UnitID>
+  <lineNum>4</lineNum>
+ </BreakPointGroup>
  <StudioWindowState>
-  <EditBounds><Rect left="436" top="141" width="1392" height="752"/></EditBounds>
+  <EditBounds><Rect left="96" top="127" width="2032" height="898"/></EditBounds>
   <WindowMaximized>0</WindowMaximized>
   <Editors>
    <EditorCount>1</EditorCount>
    <Editor>
     <EditorIndex>0</EditorIndex>
-    <EditorLocation>AEEndpointView.Set</EditorLocation>
+    <EditorLocation>MainWindow.TreeView</EditorLocation>
     <EditorPath></EditorPath>
-    <EditingPartID>1471320063</EditingPartID>
+    <EditingPartID>2019475455</EditingPartID>
     <EditorPath></EditorPath>
    </Editor>
    <SelectedTab>0</SelectedTab>
