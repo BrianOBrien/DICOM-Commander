@@ -298,11 +298,11 @@
    <SourceLine></SourceLine>
    <SourceLine>var RootQ as New AQuery()</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>//r as dicom.EnumROOTS=dicom.enumROOTS.STUDY, </SourceLine>
-   <SourceLine>//l as dicom.enumLEVELS=dicom.enumLEVELS.STUDY, </SourceLine>
+   <SourceLine>//r as enumROOTS=enumROOTS.STUDY, </SourceLine>
+   <SourceLine>//l as enumLEVELS=enumLEVELS.STUDY, </SourceLine>
    <SourceLine>//queree as dictionary, </SourceLine>
    <SourceLine>//gets as Dictionary, </SourceLine>
-   <SourceLine>//res as dicom.ANode</SourceLine>
+   <SourceLine>//res as ANode</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine></SourceLine>
    <SourceLine></SourceLine>
@@ -483,9 +483,9 @@
    <SourceLine>Sub QueryCompleted(q as AQuery)</SourceLine>
    <SourceLine>dim dics(-1) as Dictionary</SourceLine>
    <SourceLine>dim d as Dictionary</SourceLine>
-   <SourceLine>dim n as dicom.ANode</SourceLine>
+   <SourceLine>dim n as ANode</SourceLine>
    <SourceLine>dim subQuery as AQuery</SourceLine>
-   <SourceLine>dim nextLevel as dicom.enumLEVELS</SourceLine>
+   <SourceLine>dim nextLevel as enumLEVELS</SourceLine>
    <SourceLine>dim studyReq as StudyRequest</SourceLine>
    <SourceLine>dim study as AStudy</SourceLine>
    <SourceLine>dim series as ASeries</SourceLine>
@@ -499,9 +499,9 @@
    <SourceLine></SourceLine>
    <SourceLine>select case q.mLevel</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>case dicom.enumLEVELS.PATIENT</SourceLine>
+   <SourceLine>case enumLEVELS.PATIENT</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>case dicom.enumLEVELS.STUDY</SourceLine>
+   <SourceLine>case enumLEVELS.STUDY</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>studyReq = StudyRequest(q.mRootNode)</SourceLine>
    <SourceLine></SourceLine>
@@ -519,14 +519,14 @@
    <SourceLine>subQuery.Host     = q.Host</SourceLine>
    <SourceLine>subQuery.Port     = q.Port</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>subQuery.Query(q.mRoot, dicom.enumLEVELS.SERIES, study.QueryFindKeyValues, ASeries.QueryGetKeys, study)</SourceLine>
+   <SourceLine>subQuery.Query(q.mRoot, enumLEVELS.SERIES, study.QueryFindKeyValues, ASeries.QueryGetKeys, study)</SourceLine>
    <SourceLine>mQueryPool.Append(subQuery)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>StudyReceived(study)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>next</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>case dicom.enumLEVELS.SERIES</SourceLine>
+   <SourceLine>case enumLEVELS.SERIES</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>study = AStudy(q.mRootNode)</SourceLine>
    <SourceLine></SourceLine>
@@ -541,7 +541,7 @@
    <SourceLine>// No sub query at the moment.</SourceLine>
    <SourceLine>next</SourceLine>
    <SourceLine></SourceLine>
-   <SourceLine>case dicom.enumLEVELS.IMAGE</SourceLine>
+   <SourceLine>case enumLEVELS.IMAGE</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>end select</SourceLine>
    <SourceLine></SourceLine>
@@ -1016,6 +1016,9 @@
  <Using>
   <ItemName>TreeView</ItemName>
  </Using>
+ <Using>
+  <ItemName>dicom</ItemName>
+ </Using>
  <ControlBehavior>
   <Superclass>DesktopTreeView</Superclass>
  </ControlBehavior>
@@ -1171,7 +1174,7 @@
     <SourceLine>MyQuery.QueryAET = "MicMac"</SourceLine>
     <SourceLine>MyQuery.Host="MicMac.local"</SourceLine>
     <SourceLine>MyQuery.Port = 11112</SourceLine>
-    <SourceLine>MyQuery.Query(dicom.enumROOTS.STUDY, dicom.enumLEVELS.STUDY, sr.AsDictionary, AStudy.QueryGetKeys, sr)</SourceLine>
+    <SourceLine>MyQuery.Query(enumROOTS.STUDY, enumLEVELS.STUDY, sr.AsDictionary, AStudy.QueryGetKeys, sr)</SourceLine>
     <SourceLine></SourceLine>
     <SourceLine>mQueryPool.Append(MyQuery)</SourceLine>
     <SourceLine></SourceLine>
@@ -2635,7 +2638,7 @@
   <PartID>351111167</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Sub Query(r as dicom.EnumROOTS=dicom.enumROOTS.STUDY, l as dicom.enumLEVELS=dicom.enumLEVELS.STUDY, queree as dictionary, gets as Dictionary, res as dicom.ANode)</SourceLine>
+   <SourceLine>Sub Query(r as EnumROOTS = enumROOTS.STUDY, l as enumLEVELS = enumLEVELS.STUDY, queree as dictionary, gets as Dictionary, res as ANode)</SourceLine>
    <SourceLine>dim key as String</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>mRoot = r</SourceLine>
@@ -2646,22 +2649,22 @@
    <SourceLine>cmd = dcmtkpath + "findscu"</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>select case r</SourceLine>
-   <SourceLine>case dicom.enumROOTS.PATIENT</SourceLine>
+   <SourceLine>case enumROOTS.PATIENT</SourceLine>
    <SourceLine>cmd = cmd + " -P"</SourceLine>
-   <SourceLine>case  dicom.enumROOTS.STUDY</SourceLine>
+   <SourceLine>case  enumROOTS.STUDY</SourceLine>
    <SourceLine>cmd = cmd + " -S"</SourceLine>
-   <SourceLine>case dicom.enumROOTS.PATIENTSTUDY</SourceLine>
+   <SourceLine>case enumROOTS.PATIENTSTUDY</SourceLine>
    <SourceLine>cmd = cmd + " -O"</SourceLine>
    <SourceLine>end select</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>select case l</SourceLine>
-   <SourceLine>case dicom.enumLEVELS.PATIENT</SourceLine>
+   <SourceLine>case enumLEVELS.PATIENT</SourceLine>
    <SourceLine>cmd = cmd + " -k 0008,0052=PATIENT"</SourceLine>
-   <SourceLine>case dicom.enumLEVELS.STUDY</SourceLine>
+   <SourceLine>case enumLEVELS.STUDY</SourceLine>
    <SourceLine>cmd = cmd + " -k 0008,0052=STUDY"</SourceLine>
-   <SourceLine>case dicom.enumLEVELS.SERIES</SourceLine>
+   <SourceLine>case enumLEVELS.SERIES</SourceLine>
    <SourceLine>cmd = cmd + " -k 0008,0052=SERIES"</SourceLine>
-   <SourceLine>case dicom.enumLEVELS.IMAGE</SourceLine>
+   <SourceLine>case enumLEVELS.IMAGE</SourceLine>
    <SourceLine>cmd = cmd + " -k 0008,0052=IMAGE"</SourceLine>
    <SourceLine>end select</SourceLine>
    <SourceLine></SourceLine>
@@ -2691,7 +2694,7 @@
   <AliasName></AliasName>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
-  <ItemParams>r as dicom.EnumROOTS=dicom.enumROOTS.STUDY, l as dicom.enumLEVELS=dicom.enumLEVELS.STUDY, queree as dictionary, gets as Dictionary, res as dicom.ANode</ItemParams>
+  <ItemParams>r as EnumROOTS = enumROOTS.STUDY, l as enumLEVELS = enumLEVELS.STUDY, queree as dictionary, gets as Dictionary, res as ANode</ItemParams>
   <ItemResult></ItemResult>
  </Method>
  <Property>
@@ -2758,11 +2761,11 @@
   <PartID>1087563775</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mLevel As dicom.enumLEVELS</SourceLine>
+   <SourceLine>mLevel As enumLEVELS</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mLevel As dicom.enumLEVELS</ItemDeclaration>
+  <ItemDeclaration>mLevel As enumLEVELS</ItemDeclaration>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
@@ -2818,11 +2821,11 @@
   <PartID>1070385151</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mRoot As dicom.enumROOTS</SourceLine>
+   <SourceLine>mRoot As enumROOTS</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mRoot As dicom.enumROOTS</ItemDeclaration>
+  <ItemDeclaration>mRoot As enumROOTS</ItemDeclaration>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
@@ -2833,11 +2836,11 @@
   <PartID>368644095</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mRootNode As dicom.ANode</SourceLine>
+   <SourceLine>mRootNode As ANode</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mRootNode As dicom.ANode</ItemDeclaration>
+  <ItemDeclaration>mRootNode As ANode</ItemDeclaration>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
@@ -2924,73 +2927,6 @@
  </Property>
  <ViewBehavior>
   <ViewProperty>
-   <ObjName>ExecuteMode</ObjName>
-   <Visible>1</Visible>
-   <ItemType>ExecuteModes</ItemType>
-   <EditorType>Enum</EditorType>
-   <Enumeration>
-    <ItemDef>0 - Synchronous</ItemDef>
-    <ItemDef>1 - Asynchronous</ItemDef>
-    <ItemDef>2 - Interactive</ItemDef>
-   </Enumeration>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>ExitCode</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Result</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>PID</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>IsRunning</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>TimeOut</ObjName>
-   <Visible>1</Visible>
-   <ItemType>Integer</ItemType>
-   <EditorType>Integer</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Arguments</ObjName>
-   <Visible>1</Visible>
-   <ItemType>String</ItemType>
-   <EditorType>String</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Backend</ObjName>
-   <Visible>1</Visible>
-   <ItemType>String</ItemType>
-   <EditorType>String</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Canonical</ObjName>
-   <Visible>1</Visible>
-   <ItemType>Boolean</ItemType>
-   <EditorType>Boolean</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>cmd</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>String</ItemType>
-   <EditorType>MultiLineEditor</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>IsFInished</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <PropertyValue>False</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
    <ObjName>Name</ObjName>
    <Visible>1</Visible>
    <PropertyGroup>ID</PropertyGroup>
@@ -3075,6 +3011,9 @@
    <EditorType>MultiLineEditor</EditorType>
   </ViewProperty>
  </ViewBehavior>
+ <Using>
+  <ItemName>dicom</ItemName>
+ </Using>
 </block>
 <block type="Module" ID="1926866943">
  <ObjName>AEcho</ObjName>
@@ -3196,11 +3135,11 @@
   <PartID>1087563775</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mLevel As dicom.enumLEVELS</SourceLine>
+   <SourceLine>mLevel As enumLEVELS</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mLevel As dicom.enumLEVELS</ItemDeclaration>
+  <ItemDeclaration>mLevel As enumLEVELS</ItemDeclaration>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
@@ -3256,11 +3195,11 @@
   <PartID>1070385151</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mRoot As dicom.enumROOTS</SourceLine>
+   <SourceLine>mRoot As enumROOTS</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mRoot As dicom.enumROOTS</ItemDeclaration>
+  <ItemDeclaration>mRoot As enumROOTS</ItemDeclaration>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
@@ -3271,11 +3210,11 @@
   <PartID>368644095</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>mRootNode As dicom.ANode</SourceLine>
+   <SourceLine>mRootNode As ANode</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>mRootNode As dicom.ANode</ItemDeclaration>
+  <ItemDeclaration>mRootNode As ANode</ItemDeclaration>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
@@ -3362,73 +3301,6 @@
  </Property>
  <ViewBehavior>
   <ViewProperty>
-   <ObjName>ExecuteMode</ObjName>
-   <Visible>1</Visible>
-   <ItemType>ExecuteModes</ItemType>
-   <EditorType>Enum</EditorType>
-   <Enumeration>
-    <ItemDef>0 - Synchronous</ItemDef>
-    <ItemDef>1 - Asynchronous</ItemDef>
-    <ItemDef>2 - Interactive</ItemDef>
-   </Enumeration>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>ExitCode</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Result</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>String</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>PID</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>IsRunning</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>TimeOut</ObjName>
-   <Visible>1</Visible>
-   <ItemType>Integer</ItemType>
-   <EditorType>Integer</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Arguments</ObjName>
-   <Visible>1</Visible>
-   <ItemType>String</ItemType>
-   <EditorType>String</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Backend</ObjName>
-   <Visible>1</Visible>
-   <ItemType>String</ItemType>
-   <EditorType>String</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>Canonical</ObjName>
-   <Visible>1</Visible>
-   <ItemType>Boolean</ItemType>
-   <EditorType>Boolean</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>cmd</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>String</ItemType>
-   <EditorType>MultiLineEditor</EditorType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>IsFInished</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <PropertyValue>False</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
    <ObjName>Name</ObjName>
    <Visible>1</Visible>
    <PropertyGroup>ID</PropertyGroup>
@@ -3513,6 +3385,9 @@
    <EditorType>MultiLineEditor</EditorType>
   </ViewProperty>
  </ViewBehavior>
+ <Using>
+  <ItemName>dicom</ItemName>
+ </Using>
 </block>
 <block type="Module" ID="1345527807">
  <ObjName>AShell</ObjName>
@@ -4571,7 +4446,7 @@
  <ObjName>StudyRequest</ObjName>
  <ObjContainerID>0</ObjContainerID>
  <IsClass>1</IsClass>
- <Superclass>dicom.ANode</Superclass>
+ <Superclass>ANode</Superclass>
  <ItemFlags>1</ItemFlags>
  <IsInterface>0</IsInterface>
  <Compatibility></Compatibility>
@@ -4746,12 +4621,15 @@
    <ItemType>Integer</ItemType>
   </ViewProperty>
  </ViewBehavior>
+ <Using>
+  <ItemName>dicom</ItemName>
+ </Using>
 </block>
 <block type="Module" ID="1424208901">
  <ObjName>ASeries</ObjName>
  <ObjContainerID>0</ObjContainerID>
  <IsClass>1</IsClass>
- <Superclass>dicom.ANode</Superclass>
+ <Superclass>ANode</Superclass>
  <ItemFlags>1</ItemFlags>
  <IsInterface>0</IsInterface>
  <Compatibility></Compatibility>
@@ -4987,6 +4865,9 @@
    <ItemType>Integer</ItemType>
   </ViewProperty>
  </ViewBehavior>
+ <Using>
+  <ItemName>dicom</ItemName>
+ </Using>
 </block>
 <block type="Module" ID="620854309">
  <ObjName>DicomObjectBaseClass</ObjName>
@@ -5333,7 +5214,7 @@
  <ObjName>AStudy</ObjName>
  <ObjContainerID>0</ObjContainerID>
  <IsClass>1</IsClass>
- <Superclass>dicom.ANode</Superclass>
+ <Superclass>ANode</Superclass>
  <ItemFlags>1</ItemFlags>
  <IsInterface>0</IsInterface>
  <Compatibility></Compatibility>
@@ -5603,6 +5484,9 @@
    <ItemType>Boolean</ItemType>
   </ViewProperty>
  </ViewBehavior>
+ <Using>
+  <ItemName>dicom</ItemName>
+ </Using>
 </block>
 <block type="Folder" ID="408590335">
  <ObjName>VerticalToolBar</ObjName>
@@ -7902,11 +7786,11 @@
   <PartID>1323360255</PartID>
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
-   <SourceLine>Children(-1) As dicom.ANode</SourceLine>
+   <SourceLine>Children(-1) As ANode</SourceLine>
    <SourceLine></SourceLine>
   </ItemSource>
   <TextEncoding>134217984</TextEncoding>
-  <ItemDeclaration>Children(-1) As dicom.ANode</ItemDeclaration>
+  <ItemDeclaration>Children(-1) As ANode</ItemDeclaration>
   <ItemFlags>0</ItemFlags>
   <IsShared>0</IsShared>
  </Property>
@@ -7995,7 +7879,7 @@
   <PartID>28317695</PartID>
   <ItemName></ItemName>
   <UnitType>Method</UnitType>
-  <UnitID>Sub Query(r as dicom.EnumROOTS=dicom.enumROOTS.STUDY, l as dicom.enumLEVELS=dicom.enumLEVELS.STUDY, queree as dictionary, gets as Dictionary, res as dicom.ANode)</UnitID>
+  <UnitID>Sub Query(r as EnumROOTS = enumROOTS.STUDY, l as enumLEVELS = enumLEVELS.STUDY, queree as dictionary, gets as Dictionary, res as ANode)</UnitID>
   <lineNum>1</lineNum>
  </BreakPointGroup>
  <BreakPointGroup>
@@ -8012,9 +7896,9 @@
    <EditorCount>1</EditorCount>
    <Editor>
     <EditorIndex>0</EditorIndex>
-    <EditorLocation>MainWindow.TreeView</EditorLocation>
+    <EditorLocation>ASeries.dicom</EditorLocation>
     <EditorPath></EditorPath>
-    <EditingPartID>2019475455</EditingPartID>
+    <EditingPartID>1424208901</EditingPartID>
     <EditorPath></EditorPath>
    </Editor>
    <SelectedTab>0</SelectedTab>
