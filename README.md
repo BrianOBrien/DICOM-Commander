@@ -1,4 +1,34 @@
-# DICOM Sync
+# DICOM Commander
+
+**DICOM Commander** is a DICOM networking utility designed to **synchronize imaging studies between DICOM servers**.
+
+It uses **C-FIND** to discover studies on a source system and **C-MOVE** to instruct that system to send studies **directly to a destination DICOM server**.  
+DICOM Commander does **not** retrieve or store images locally.
+
+## What DICOM Commander Does
+
+- DICOM Verification (C-ECHO)
+- Study and Series discovery using C-FIND
+- Server-to-server synchronization using C-MOVE
+
+## What DICOM Commander Does NOT Do
+
+- No local image storage
+- No C-GET retrieval
+- No Modality Worklist (MWL)
+- Not a PACS
+- No persistent configuration file (currently)
+
+## Core Design Principle
+
+DICOM Commander treats DICOM operations as **remote execution**, not data ingestion.  
+Pixel data always flows **between servers**, never through DICOM Commander itself.
+
+## Documentation
+
+Full documentation is available in the `docs/` folder and published via GitHub Pages.
+
+Start here: `docs/index.md`
 
 A cross-platform DICOM synchronization and query tool built using Xojo and dcmtk
 
@@ -17,10 +47,7 @@ A cross-platform DICOM synchronization and query tool built using Xojo and dcmtk
   - Pause
 
 ### Technology
-- .NET 8+
-- Avalonia 11
 - Cross-platform: Linux (Pi), macOS, Windows
-- MVC architecture planned
 
 ### Status
 This is an early UI skeleton — functionality will be implemented next.

@@ -424,7 +424,7 @@
    <SourceLine>Return "  " + node.Description + ": " + node.UID</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Case ModelSync.NodeKind.Study</SourceLine>
-   <SourceLine>Return "Study: " + node.Description + " [" + node.UID + "]"</SourceLine>
+   <SourceLine>Return "dd" + node.Description + " [" + node.UID + "]"</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>Case ModelSync.NodeKind.Series</SourceLine>
    <SourceLine>Return "Series: " + node.Description + " [" + node.UID + "]"</SourceLine>
@@ -584,7 +584,7 @@
   <ItemSource>
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub StudyReceived(study as AStudy)</SourceLine>
-   <SourceLine>System.DebugLog("Study Received")</SourceLine>
+   <SourceLine>System.DebugLog("Study :" + study.StudyUID.Value)</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>End Sub</SourceLine>
   </ItemSource>
@@ -1063,7 +1063,7 @@
    <ItemSource>
     <TextEncoding>134217984</TextEncoding>
     <SourceLine>Sub Echo(aet as string, host as string, port as string)</SourceLine>
-    <SourceLine>MessageBox("Echo")</SourceLine>
+    <SourceLine>RunEchoSCU(aet, SelfAEEndpointView.AET, host, port)</SourceLine>
     <SourceLine></SourceLine>
     <SourceLine>End Sub</SourceLine>
    </ItemSource>
@@ -2687,6 +2687,8 @@
    <SourceLine>'139.48.221.112 105 -aec CGETROUTER -aet PACSYNC</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>cmd = cmd + " -aet " + MyAET + " -aec " + QueryAET + " " + host + " " + str(port)</SourceLine>
+   <SourceLine>System.DebugLog("Q:" + cmd)</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>End Sub</SourceLine>
   </ItemSource>
@@ -2982,7 +2984,7 @@
   <ViewProperty>
    <ObjName>mRoot</ObjName>
    <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>dicom.enumROOTS</ItemType>
+   <ItemType>enumROOTS</ItemType>
    <EditorType>Enum</EditorType>
    <Enumeration>
     <ItemDef>0 - PATIENT</ItemDef>
@@ -2995,7 +2997,7 @@
   <ViewProperty>
    <ObjName>mLevel</ObjName>
    <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>dicom.enumLEVELS</ItemType>
+   <ItemType>enumLEVELS</ItemType>
    <EditorType>Enum</EditorType>
    <Enumeration>
     <ItemDef>0 - PATIENT</ItemDef>
@@ -3054,12 +3056,20 @@
    <TextEncoding>134217984</TextEncoding>
    <SourceLine>Sub Echo(AET As String, AEC As String, Host As String, Port As String)</SourceLine>
    <SourceLine>cmd = dcmtkpath + "echoscu"</SourceLine>
-   <SourceLine>cmd = cmd + " -d -aet " + AET + " -aec " + AEC + " " + Host + " " + Port</SourceLine>
+   <SourceLine>cmd = cmd + " -v -d -aet " + AET + " -aec " + AEC + " " + Host + " " + Port</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>var sh as new Shell</SourceLine>
+   <SourceLine>var results as string</SourceLine>
+   <SourceLine>var d(-1) as Dictionary</SourceLine>
+   <SourceLine></SourceLine>
    <SourceLine>sh.ExecuteMode = Shell.ExecuteModes.Synchronous</SourceLine>
    <SourceLine>sh.Execute(cmd)</SourceLine>
-   <SourceLine>MessageBox(cmd + EndOfLine + sh.Result)</SourceLine>
+   <SourceLine>results = sh.ReadAll</SourceLine>
+   <SourceLine>if sh.ExitCode =  0 then</SourceLine>
+   <SourceLine>MessageBox("Success")</SourceLine>
+   <SourceLine>else</SourceLine>
+   <SourceLine>MessageBox(results)</SourceLine>
+   <SourceLine>end if</SourceLine>
    <SourceLine></SourceLine>
    <SourceLine></SourceLine>
    <SourceLine>End Sub</SourceLine>
@@ -3070,6 +3080,75 @@
   <IsShared>0</IsShared>
   <ItemParams>AET As String, AEC As String, Host As String, Port As String</ItemParams>
   <ItemResult></ItemResult>
+ </Method>
+ <Method>
+  <ItemName>ParseResults</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1262073855</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function ParseResults() As Dictionary()</SourceLine>
+   <SourceLine>dim DArray(-1) as Dictionary</SourceLine>
+   <SourceLine>dim dic as new Dictionary</SourceLine>
+   <SourceLine>dim lines() as String</SourceLine>
+   <SourceLine>dim GrpID, Value as string</SourceLine>
+   <SourceLine>dim leftBracket, rightBracket, leftBrace, rightBrace as integer</SourceLine>
+   <SourceLine>dim i as integer</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>lines = Result.Split(Chr(10))</SourceLine>
+   <SourceLine>if lines.Ubound &gt; 0 then</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if lines(0).left(2) = "E:" then</SourceLine>
+   <SourceLine>System.DebugLog("There was a dcmtk error. " + lines(0))</SourceLine>
+   <SourceLine>return nil</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>for i=0 to lines.Ubound</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>leftBracket = lines(i).InStr("(")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if leftBracket &lt;&gt; 0 then</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>rightBracket = lines(i).InStr(")")</SourceLine>
+   <SourceLine>leftBrace = lines(i).InStr("[")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if leftBrace &lt;&gt; 0 then</SourceLine>
+   <SourceLine>rightBrace = lines(i).Instr("]")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>GrpID  = lines(i).Mid(leftBracket+1, rightBracket-leftBracket-1)</SourceLine>
+   <SourceLine>Value = lines(i).Mid(leftBrace+1, rightBrace-leftBrace-1)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Make sure no null characters are inserted into the string.</SourceLine>
+   <SourceLine>Value = replaceAll(value, chr(0), "")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if dic.HasKey(GrpID) then</SourceLine>
+   <SourceLine>DArray.Append(dic)</SourceLine>
+   <SourceLine>dic = new Dictionary</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dic.Value(GrpID)=Value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DArray.Append(dic)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>return DArray</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams></ItemParams>
+  <ItemResult>Dictionary()</ItemResult>
  </Method>
  <Property>
   <ItemName>dcmtkpath</ItemName>
@@ -3356,7 +3435,7 @@
   <ViewProperty>
    <ObjName>mRoot</ObjName>
    <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>dicom.enumROOTS</ItemType>
+   <ItemType>enumROOTS</ItemType>
    <EditorType>Enum</EditorType>
    <Enumeration>
     <ItemDef>0 - PATIENT</ItemDef>
@@ -3369,7 +3448,7 @@
   <ViewProperty>
    <ObjName>mLevel</ObjName>
    <PropertyGroup>Behavior</PropertyGroup>
-   <ItemType>dicom.enumLEVELS</ItemType>
+   <ItemType>enumLEVELS</ItemType>
    <EditorType>Enum</EditorType>
    <Enumeration>
     <ItemDef>0 - PATIENT</ItemDef>
@@ -4582,12 +4661,6 @@
  </Property>
  <ViewBehavior>
   <ViewProperty>
-   <ObjName>IsSelected</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <PropertyValue>false</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
-  <ViewProperty>
    <ObjName>Name</ObjName>
    <Visible>1</Visible>
    <PropertyGroup>ID</PropertyGroup>
@@ -4825,12 +4898,6 @@
   <IsShared>0</IsShared>
  </Property>
  <ViewBehavior>
-  <ViewProperty>
-   <ObjName>IsSelected</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <PropertyValue>false</PropertyValue>
-   <ItemType>Boolean</ItemType>
-  </ViewProperty>
   <ViewProperty>
    <ObjName>Name</ObjName>
    <Visible>1</Visible>
@@ -5174,6 +5241,75 @@
   <ItemParams>extends s as String, c as String</ItemParams>
   <ItemResult>Integer</ItemResult>
  </Method>
+ <Method>
+  <ItemName>Parse_dcmtk_Results</ItemName>
+  <Compatibility></Compatibility>
+  <Visible>1</Visible>
+  <PartID>1966979071</PartID>
+  <ItemSource>
+   <TextEncoding>134217984</TextEncoding>
+   <SourceLine>Function Parse_dcmtk_Results(Results as string) As Dictionary()</SourceLine>
+   <SourceLine>dim DArray(-1) as Dictionary</SourceLine>
+   <SourceLine>dim dic as new Dictionary</SourceLine>
+   <SourceLine>dim lines() as String</SourceLine>
+   <SourceLine>dim GrpID, Value as string</SourceLine>
+   <SourceLine>dim leftBracket, rightBracket, leftBrace, rightBrace as integer</SourceLine>
+   <SourceLine>dim i as integer</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>lines = Results.Split(Chr(10))</SourceLine>
+   <SourceLine>if lines.Ubound &gt; 0 then</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if lines(0).left(2) = "E:" then</SourceLine>
+   <SourceLine>System.DebugLog("There was a dcmtk error. " + lines(0))</SourceLine>
+   <SourceLine>return nil</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>for i=0 to lines.Ubound</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>leftBracket = lines(i).InStr("(")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if leftBracket &lt;&gt; 0 then</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>rightBracket = lines(i).InStr(")")</SourceLine>
+   <SourceLine>leftBrace = lines(i).InStr("[")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if leftBrace &lt;&gt; 0 then</SourceLine>
+   <SourceLine>rightBrace = lines(i).Instr("]")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>GrpID  = lines(i).Mid(leftBracket+1, rightBracket-leftBracket-1)</SourceLine>
+   <SourceLine>Value = lines(i).Mid(leftBrace+1, rightBrace-leftBrace-1)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>// Make sure no null characters are inserted into the string.</SourceLine>
+   <SourceLine>Value = replaceAll(value, chr(0), "")</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>if dic.HasKey(GrpID) then</SourceLine>
+   <SourceLine>DArray.Append(dic)</SourceLine>
+   <SourceLine>dic = new Dictionary</SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>dic.Value(GrpID)=Value</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>next</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>DArray.Append(dic)</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>end if</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>return DArray</SourceLine>
+   <SourceLine></SourceLine>
+   <SourceLine>End Function</SourceLine>
+  </ItemSource>
+  <TextEncoding>134217984</TextEncoding>
+  <AliasName></AliasName>
+  <ItemFlags>0</ItemFlags>
+  <IsShared>0</IsShared>
+  <ItemParams>Results as string</ItemParams>
+  <ItemResult>Dictionary()</ItemResult>
+ </Method>
  <ViewBehavior>
   <ViewProperty>
    <ObjName>Name</ObjName>
@@ -5476,12 +5612,6 @@
    <PropertyGroup>Position</PropertyGroup>
    <PropertyValue>0</PropertyValue>
    <ItemType>Integer</ItemType>
-  </ViewProperty>
-  <ViewProperty>
-   <ObjName>IsSelected</ObjName>
-   <PropertyGroup>Behavior</PropertyGroup>
-   <PropertyValue>false</PropertyValue>
-   <ItemType>Boolean</ItemType>
   </ViewProperty>
  </ViewBehavior>
  <Using>
@@ -7876,29 +8006,85 @@
   <lineNum>27</lineNum>
  </BreakPointGroup>
  <BreakPointGroup>
-  <PartID>28317695</PartID>
+  <PartID>1926866943</PartID>
   <ItemName></ItemName>
   <UnitType>Method</UnitType>
-  <UnitID>Sub Query(r as EnumROOTS = enumROOTS.STUDY, l as enumLEVELS = enumLEVELS.STUDY, queree as dictionary, gets as Dictionary, res as ANode)</UnitID>
+  <UnitID>Sub Echo(AET As String, AEC As String, Host As String, Port As String)</UnitID>
+  <lineNum>1</lineNum>
+ </BreakPointGroup>
+ <BreakPointGroup>
+  <PartID>1926866943</PartID>
+  <ItemName></ItemName>
+  <UnitType>Method</UnitType>
+  <UnitID>Sub Echo(AET As String, AEC As String, Host As String, Port As String)</UnitID>
+  <lineNum>11</lineNum>
+ </BreakPointGroup>
+ <BreakPointGroup>
+  <PartID>2019475455</PartID>
+  <ItemName></ItemName>
+  <UnitType>Method</UnitType>
+  <UnitID>Sub StudyReceived(study as AStudy)</UnitID>
   <lineNum>1</lineNum>
  </BreakPointGroup>
  <BreakPointGroup>
   <PartID>2019475455</PartID>
-  <ItemName>SyncToolbar1</ItemName>
-  <UnitType>Event Handler</UnitType>
-  <UnitID>Sub StartEvent()</UnitID>
-  <lineNum>4</lineNum>
+  <ItemName></ItemName>
+  <UnitType>Method</UnitType>
+  <UnitID>Sub SeriesReceived(series as ASeries)</UnitID>
+  <lineNum>1</lineNum>
+ </BreakPointGroup>
+ <BreakPointGroup>
+  <PartID>1345527807</PartID>
+  <ItemName></ItemName>
+  <UnitType>Method</UnitType>
+  <UnitID>Function ParseResults() As Dictionary()</UnitID>
+  <lineNum>1</lineNum>
+ </BreakPointGroup>
+ <BreakPointGroup>
+  <PartID>1345527807</PartID>
+  <ItemName></ItemName>
+  <UnitType>Method</UnitType>
+  <UnitID>Function ParseResults() As Dictionary()</UnitID>
+  <lineNum>51</lineNum>
+ </BreakPointGroup>
+ <BreakPointGroup>
+  <PartID>2019475455</PartID>
+  <ItemName></ItemName>
+  <UnitType>Method</UnitType>
+  <UnitID>Sub QueryCompleted(q as AQuery)</UnitID>
+  <lineNum>14</lineNum>
+ </BreakPointGroup>
+ <BreakPointGroup>
+  <PartID>2019475455</PartID>
+  <ItemName></ItemName>
+  <UnitType>Method</UnitType>
+  <UnitID>Sub QueryCompleted(q as AQuery)</UnitID>
+  <lineNum>23</lineNum>
+ </BreakPointGroup>
+ <BreakPointGroup>
+  <PartID>2019475455</PartID>
+  <ItemName></ItemName>
+  <UnitType>Method</UnitType>
+  <UnitID>Sub QueryCompleted(q as AQuery)</UnitID>
+  <lineNum>48</lineNum>
+ </BreakPointGroup>
+ <BreakPointGroup>
+  <PartID>2019475455</PartID>
+  <ItemName></ItemName>
+  <UnitType>Method</UnitType>
+  <UnitID>Sub QueryCompleted(q as AQuery)</UnitID>
+  <lineNum>56</lineNum>
  </BreakPointGroup>
  <StudioWindowState>
-  <EditBounds><Rect left="96" top="127" width="2032" height="898"/></EditBounds>
+  <EditBounds><Rect left="73" top="116" width="2210" height="898"/></EditBounds>
   <WindowMaximized>0</WindowMaximized>
   <Editors>
    <EditorCount>1</EditorCount>
    <Editor>
     <EditorIndex>0</EditorIndex>
-    <EditorLocation>ASeries.dicom</EditorLocation>
+    <EditorLocation>MainWindow.QueryCompleted</EditorLocation>
     <EditorPath></EditorPath>
-    <EditingPartID>1424208901</EditingPartID>
+    <EditingPartID>2019475455</EditingPartID>
     <EditorPath></EditorPath>
    </Editor>
    <SelectedTab>0</SelectedTab>
